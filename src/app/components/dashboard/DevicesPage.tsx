@@ -82,8 +82,8 @@ export function DevicesPage() {
                     <div className="flex items-center gap-2">
                       <div className="w-24 h-2 rounded-full bg-muted overflow-hidden">
                         <div 
-                          className={\`h-full \${device.health > 80 ? 'bg-emerald-500' : device.health > 50 ? 'bg-amber-500' : 'bg-rose-500'}\`} 
-                          style={{ width: \`\${device.health}%\` }}
+                          className={`h-full ${device.health > 80 ? 'bg-emerald-500' : device.health > 50 ? 'bg-amber-500' : 'bg-rose-500'}`} 
+                          style={{ width: `${device.health}%` }}
                         />
                       </div>
                       <span className="text-xs font-medium">{device.health}%</span>

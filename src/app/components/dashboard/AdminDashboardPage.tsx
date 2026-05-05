@@ -108,17 +108,17 @@ export function AdminDashboardPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={\`px-2.5 py-1 rounded-full text-xs font-medium border \${
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${
                       user.role === 'Master Admin' ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' :
                       user.role === 'Operator' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' :
                       'bg-muted text-muted-foreground border-border'
-                    }\`}>
+                    }`}>
                       {user.role}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-1.5">
-                      <div className={\`h-2 w-2 rounded-full \${user.status === 'active' ? 'bg-emerald-500' : 'bg-muted-foreground'}\`} />
+                      <div className={`h-2 w-2 rounded-full ${user.status === 'active' ? 'bg-emerald-500' : 'bg-muted-foreground'}`} />
                       <span className="capitalize text-muted-foreground">{user.status}</span>
                     </div>
                   </td>

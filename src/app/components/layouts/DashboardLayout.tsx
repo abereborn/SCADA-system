@@ -23,7 +23,6 @@ import {
 import { useState } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Avatar from "@radix-ui/react-avatar";
-import { motion, AnimatePresence } from "motion/react";
 
 export function DashboardLayout() {
   const [collapsed, setCollapsed] = useState(false);
@@ -57,10 +56,9 @@ export function DashboardLayout() {
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden">
       {/* Sidebar */}
-      <motion.aside
-        initial={false}
-        animate={{ width: collapsed ? 80 : 280 }}
-        className="flex flex-col border-r border-border bg-card relative z-20 transition-all duration-300 h-full"
+      <aside
+        style={{ width: collapsed ? 80 : 280 }}
+        className="flex flex-col border-r border-border bg-card relative z-20 transition-all duration-300 h-full shrink-0"
       >
         <div className="flex items-center justify-between p-4 h-16 border-b border-border">
           {!collapsed && (
@@ -91,11 +89,11 @@ export function DashboardLayout() {
                 to={item.to}
                 end={item.to === "/dashboard"}
                 className={({ isActive }) =>
-                  \`flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors \${
+                  `flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors ${
                     isActive
                       ? "bg-primary text-primary-foreground font-medium shadow-sm"
                       : "text-foreground/80 hover:bg-accent hover:text-accent-foreground"
-                  }\`
+                  }`
                 }
                 title={collapsed ? item.name : undefined}
               >
@@ -126,11 +124,11 @@ export function DashboardLayout() {
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
-                  \`flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors \${
+                  `flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors ${
                     isActive
                       ? "bg-primary text-primary-foreground font-medium shadow-sm"
                       : "text-destructive hover:bg-destructive/10"
-                  }\`
+                  }`
                 }
                 title={collapsed ? item.name : undefined}
               >
@@ -158,7 +156,7 @@ export function DashboardLayout() {
             {!collapsed && <span>Logout</span>}
           </button>
         </div>
-      </motion.aside>
+      </aside>
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 bg-muted/30">
@@ -175,13 +173,13 @@ export function DashboardLayout() {
             <div className="flex items-center gap-2 p-1 border border-border rounded-full bg-background/50">
               <button
                 onClick={() => setTheme("light")}
-                className={\`p-1.5 rounded-full transition-colors \${theme === 'light' ? 'bg-primary text-primary-foreground' : 'text-foreground/60 hover:text-foreground'}\`}
+                className={`p-1.5 rounded-full transition-colors ${theme === 'light' ? 'bg-primary text-primary-foreground' : 'text-foreground/60 hover:text-foreground'}`}
               >
                 <Sun className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setTheme("dark")}
-                className={\`p-1.5 rounded-full transition-colors \${theme === 'dark' ? 'bg-primary text-primary-foreground' : 'text-foreground/60 hover:text-foreground'}\`}
+                className={`p-1.5 rounded-full transition-colors ${theme === 'dark' ? 'bg-primary text-primary-foreground' : 'text-foreground/60 hover:text-foreground'}`}
               >
                 <Moon className="w-4 h-4" />
               </button>

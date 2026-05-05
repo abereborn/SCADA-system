@@ -22,7 +22,7 @@ export function ReportsPage() {
     // Simulate export delay
     setTimeout(() => {
       setIsExporting(false);
-      alert(\`Successfully exported report as \${format.toUpperCase()}\`);
+alert(`Successfully exported report as ${format.toUpperCase()}`);
     }, 1500);
   };
 
@@ -94,19 +94,19 @@ export function ReportsPage() {
           <div className="flex gap-2">
             <button 
               onClick={() => setMetric('temp')}
-              className={\`flex-1 py-2 text-sm font-medium rounded-md transition-colors \${metric === 'temp' ? 'bg-rose-500 text-white shadow-sm' : 'bg-muted hover:bg-muted/80 text-muted-foreground'}\`}
+              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${metric === 'temp' ? 'bg-rose-500 text-white shadow-sm' : 'bg-muted hover:bg-muted/80 text-muted-foreground'}`}
             >
               Temp
             </button>
             <button 
               onClick={() => setMetric('pressure')}
-              className={\`flex-1 py-2 text-sm font-medium rounded-md transition-colors \${metric === 'pressure' ? 'bg-sky-500 text-white shadow-sm' : 'bg-muted hover:bg-muted/80 text-muted-foreground'}\`}
+              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${metric === 'pressure' ? 'bg-sky-500 text-white shadow-sm' : 'bg-muted hover:bg-muted/80 text-muted-foreground'}`}
             >
               Pressure
             </button>
             <button 
               onClick={() => setMetric('flow')}
-              className={\`flex-1 py-2 text-sm font-medium rounded-md transition-colors \${metric === 'flow' ? 'bg-emerald-500 text-white shadow-sm' : 'bg-muted hover:bg-muted/80 text-muted-foreground'}\`}
+              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${metric === 'flow' ? 'bg-emerald-500 text-white shadow-sm' : 'bg-muted hover:bg-muted/80 text-muted-foreground'}`}
             >
               Flow
             </button>
@@ -123,13 +123,13 @@ export function ReportsPage() {
           <div className="flex bg-muted p-1 rounded-md">
             <button 
               onClick={() => setChartType('line')}
-              className={\`p-1.5 rounded-sm transition-colors \${chartType === 'line' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}\`}
+              className={`p-1.5 rounded-sm transition-colors ${chartType === 'line' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
             >
               <LineChartIcon className="h-4 w-4" />
             </button>
             <button 
               onClick={() => setChartType('bar')}
-              className={\`p-1.5 rounded-sm transition-colors \${chartType === 'bar' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}\`}
+              className={`p-1.5 rounded-sm transition-colors ${chartType === 'bar' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
             >
               <BarChart3 className="h-4 w-4" />
             </button>

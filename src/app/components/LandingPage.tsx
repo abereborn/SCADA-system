@@ -1,7 +1,17 @@
-import { Link } from 'react-router';
-import { Activity, Shield, Bell, TrendingUp, Twitter, Linkedin, Github, Sun, Moon } from 'lucide-react';
-import { useTheme } from './ThemeProvider';
-import { WeatherMap } from './WeatherMap';
+import { Link } from "react-router";
+import {
+  Activity,
+  Shield,
+  Bell,
+  TrendingUp,
+  Twitter,
+  Linkedin,
+  Github,
+  Sun,
+  Moon,
+} from "lucide-react";
+import { useTheme } from "./ThemeProvider";
+import { WeatherMap } from "./WeatherMap";
 
 export function LandingPage() {
   const { theme, setTheme } = useTheme();
@@ -14,15 +24,23 @@ export function LandingPage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
               <Activity className="size-8 text-primary" />
-              <span className="text-xl font-semibold">SCADA Control</span>
+              <span className="text-xl font-semibold">
+                SCADA Control
+              </span>
             </div>
             <div className="flex items-center gap-4">
               <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                onClick={() =>
+                  setTheme(theme === "dark" ? "light" : "dark")
+                }
                 className="p-2 rounded-full bg-accent/50 text-foreground hover:bg-accent transition-colors"
                 aria-label="Toggle theme"
               >
-                {theme === 'dark' ? <Sun className="size-5" /> : <Moon className="size-5" />}
+                {theme === "dark" ? (
+                  <Sun className="size-5" />
+                ) : (
+                  <Moon className="size-5" />
+                )}
               </button>
               <Link
                 to="/login"
@@ -43,7 +61,9 @@ export function LandingPage() {
               Smart SCADA Monitoring
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Advanced supervisory control and data acquisition platform featuring real-time geospatial weather monitoring across Indonesia.
+              Advanced supervisory control and data acquisition
+              platform featuring real-time geospatial weather
+              monitoring across Indonesia.
             </p>
           </div>
           <div className="flex gap-4 justify-center flex-wrap">
@@ -64,30 +84,45 @@ export function LandingPage() {
       </section>
 
       {/* Indonesia Weather Map Section */}
-      <section id="map-section" className="py-12 px-4 bg-muted/30">
+      <section
+        id="map-section"
+        className="py-12 px-4 bg-muted/30"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-bold mb-4">Indonesia Weather Radar</h2>
+            <h2 className="text-3xl font-bold mb-4">
+              Indonesia Weather Radar
+            </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Real-time visualization of temperature, rainfall, and humidity data across regions. Data simulation inspired by BMKG API endpoints.
+              Real-time visualization of temperature, rainfall,
+              and humidity data across regions. Data simulation
+              inspired by BMKG API endpoints.
             </p>
           </div>
-          <WeatherMap />
+          <div className="h-[300px] bg-muted flex items-center justify-center rounded-xl">
+            Map Preview (Disabled in Figma)
+          </div>
         </div>
       </section>
 
       {/* Features Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl text-center mb-16 font-bold">System Capabilities</h2>
+          <h2 className="text-4xl text-center mb-16 font-bold">
+            System Capabilities
+          </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <FeatureCard
-              icon={<Activity className="size-10 text-primary" />}
+              icon={
+                <Activity className="size-10 text-primary" />
+              }
               title="Real-Time Telemetry"
               description="Monitor critical infrastructure parameters with millisecond precision and live chart updates."
             />
             <FeatureCard
-              icon={<Shield className="size-10 text-emerald-500" />}
+              icon={
+                <Shield className="size-10 text-emerald-500" />
+              }
               title="Secure Control"
               description="Role-based access control and encrypted channels for remote operational commands."
             />
@@ -97,7 +132,9 @@ export function LandingPage() {
               description="Color-coded severity levels with blinking indicators for rapid incident response."
             />
             <FeatureCard
-              icon={<TrendingUp className="size-10 text-cyan-500" />}
+              icon={
+                <TrendingUp className="size-10 text-cyan-500" />
+              }
               title="Advanced Analytics"
               description="Generate PDF and CSV reports from historical data and sensor trends."
             />
@@ -112,7 +149,9 @@ export function LandingPage() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Activity className="size-6 text-primary" />
-                <span className="text-lg font-semibold">SCADA Control</span>
+                <span className="text-lg font-semibold">
+                  SCADA Control
+                </span>
               </div>
               <p className="text-muted-foreground">
                 Industrial grade monitoring and control.
@@ -120,19 +159,36 @@ export function LandingPage() {
             </div>
             <div>
               <h3 className="font-medium mb-4">Contact</h3>
-              <p className="text-muted-foreground mb-2">support@scada-control.com</p>
-              <p className="text-muted-foreground">+62 811 1234 5678</p>
+              <p className="text-muted-foreground mb-2">
+                support@scada-control.com
+              </p>
+              <p className="text-muted-foreground">
+                +62 811 1234 5678
+              </p>
             </div>
             <div>
               <h3 className="font-medium mb-4">Quick Links</h3>
               <div className="flex flex-col gap-2">
-                <Link to="/login" className="text-muted-foreground hover:text-primary transition-colors">Admin Login</Link>
-                <Link to="/dashboard" className="text-muted-foreground hover:text-primary transition-colors">Dashboard Demo</Link>
+                <Link
+                  to="/login"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Admin Login
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Dashboard Demo
+                </Link>
               </div>
             </div>
           </div>
           <div className="border-t border-border pt-8 flex justify-between items-center flex-wrap gap-4 text-sm text-muted-foreground">
-            <p>&copy; 2026 SCADA Systems Indonesia. All rights reserved.</p>
+            <p>
+              &copy; 2026 SCADA Systems Indonesia. All rights
+              reserved.
+            </p>
             <div className="flex gap-4">
               <Twitter className="size-5 hover:text-primary cursor-pointer transition-colors" />
               <Linkedin className="size-5 hover:text-primary cursor-pointer transition-colors" />
@@ -145,12 +201,22 @@ export function LandingPage() {
   );
 }
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
   return (
     <div className="bg-card border border-border rounded-xl p-6 hover:shadow-lg hover:border-primary/50 transition-all duration-300">
       <div className="mb-4">{icon}</div>
       <h3 className="text-xl font-medium mb-3">{title}</h3>
-      <p className="text-muted-foreground leading-relaxed">{description}</p>
+      <p className="text-muted-foreground leading-relaxed">
+        {description}
+      </p>
     </div>
   );
 }

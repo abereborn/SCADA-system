@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { AlertTriangle, AlertCircle, Info, CheckCircle2, Clock, Filter } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
 
 type Alert = {
   id: string;
@@ -27,10 +26,10 @@ export function AlertsPage() {
     const timer = setInterval(() => {
       if (Math.random() > 0.7) {
         const newAlert: Alert = {
-          id: \`ALT-00\${alerts.length + 1}\`,
+          id: `ALT-00 ${alerts.length + 1}`,
           severity: Math.random() > 0.8 ? 'critical' : Math.random() > 0.5 ? 'warning' : 'info',
           message: 'Anomaly detected in flow rate sensor',
-          source: \`Sensor \${Math.floor(Math.random() * 10) + 1}\`,
+          source: `Sensor ${Math.floor(Math.random() * 10) + 1}`,
           timestamp: new Date(),
           resolved: false,
         };
@@ -80,19 +79,19 @@ export function AlertsPage() {
         <div className="flex gap-2 bg-muted/50 p-1 rounded-lg border border-border">
           <button 
             onClick={() => setFilter('all')}
-            className={\`px-4 py-1.5 rounded-md text-sm font-medium transition-colors \${filter === 'all' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}\`}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${filter === 'all' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
           >
             All
           </button>
           <button 
             onClick={() => setFilter('active')}
-            className={\`px-4 py-1.5 rounded-md text-sm font-medium transition-colors \${filter === 'active' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}\`}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${filter === 'active' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
           >
             Active
           </button>
           <button 
             onClick={() => setFilter('resolved')}
-            className={\`px-4 py-1.5 rounded-md text-sm font-medium transition-colors \${filter === 'resolved' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}\`}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${filter === 'resolved' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
           >
             Resolved
           </button>
@@ -100,14 +99,10 @@ export function AlertsPage() {
       </div>
 
       <div className="space-y-4">
-        <AnimatePresence>
           {filteredAlerts.map(alert => (
-            <motion.div
+            <div
               key={alert.id}
-              initial={{ opacity: 0, y: -20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
-              className={\`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center gap-4 justify-between transition-all \${getSeverityBg(alert.severity, alert.resolved)}\`}
+              className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center gap-4 justify-between transition-all ${getSeverityBg(alert.severity, alert.resolved)}`}
             >
               <div className="flex items-start gap-4">
                 <div className="mt-1">
@@ -115,16 +110,16 @@ export function AlertsPage() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={\`text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full \${
+                    <span className={`text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
                       alert.severity === 'critical' ? 'bg-rose-500/20 text-rose-500' :
                       alert.severity === 'warning' ? 'bg-amber-500/20 text-amber-500' :
                       'bg-blue-500/20 text-blue-500'
-                    }\`}>
+                    }`}>
                       {alert.severity}
                     </span>
                     <span className="text-sm font-medium text-foreground">{alert.source}</span>
                   </div>
-                  <p className={\`text-base \${alert.resolved ? 'text-muted-foreground line-through' : 'text-foreground font-medium'}\`}>
+                  <p className={`text-base ${alert.resolved ? 'text-muted-foreground line-through' : 'text-foreground font-medium'}`}>
                     {alert.message}
                   </p>
                   <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
@@ -150,9 +145,8 @@ export function AlertsPage() {
                   </span>
                 )}
               </div>
-            </motion.div>
+            </div>
           ))}
-        </AnimatePresence>
         
         {filteredAlerts.length === 0 && (
           <div className="text-center p-12 bg-card border border-border rounded-xl">
