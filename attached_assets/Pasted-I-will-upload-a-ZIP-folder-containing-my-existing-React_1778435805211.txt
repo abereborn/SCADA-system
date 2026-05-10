@@ -1,0 +1,304 @@
+I will upload a ZIP folder containing my existing React + Tailwind SCADA dashboard project. Your task is to continue and extend the project professionally while preserving the current visual identity, futuristic aesthetic, and component structure.
+
+IMPORTANT:
+
+* Do NOT redesign the existing dashboard page drastically.
+* Maintain the same premium futuristic SCADA/NOC style already used in the project.
+* Keep the dark cyber-industrial UI theme.
+* Use modern glassmorphism, neon glow accents, smooth animations, gradients, and highly polished layouts.
+* The design must feel like a next-generation industrial monitoring platform / modern SCADA system.
+* Everything must be responsive and optimized for desktop, tablet, and mobile.
+
+==================================================
+PAGES TO CREATE
+===============
+
+Create fully designed and responsive pages for:
+
+1. Monitoring
+2. Devices
+3. Alerts
+4. Reports
+5. Settings
+
+Each page must:
+
+* Match the existing dashboard theme perfectly.
+* Have unique layouts and components.
+* Feel premium, futuristic, and modern.
+* Include dummy realistic data.
+* Use reusable components where possible.
+* Include smooth hover effects and transitions.
+* Support responsive layouts properly.
+
+==================================================
+DESIGN STYLE
+============
+
+Use a very modern futuristic SCADA / NOC / Industrial AI Control Center design.
+
+Visual characteristics:
+
+* Dark navy/black background
+* Cyan, blue, purple, emerald, amber neon accents
+* Glassmorphism cards
+* Glow effects
+* Soft borders
+* Backdrop blur
+* Animated indicators
+* Modern charts
+* Clean spacing
+* Minimal but powerful UI
+* Premium typography
+* Professional industrial dashboard appearance
+
+The UI should feel inspired by:
+
+* Modern AI dashboards
+* Cyberpunk industrial interfaces
+* Smart city monitoring systems
+* Enterprise telemetry platforms
+* Advanced SCADA software
+
+==================================================
+RESPONSIVE REQUIREMENTS
+=======================
+
+The current project has a problem:
+
+On mobile view, when clicking the hamburger menu, the sidebar appears EMPTY.
+
+FIX THIS ISSUE COMPLETELY.
+
+Requirements:
+
+* Mobile sidebar must show ALL navigation items properly.
+* Mobile drawer/sidebar must work correctly.
+* Sidebar content must not disappear.
+* Add smooth slide-in animation.
+* Clicking outside closes sidebar.
+* Sidebar should be scrollable if content overflows.
+* Maintain same futuristic style on mobile.
+
+Ensure:
+
+* No broken layouts
+* No overflow issues
+* No infinite height bugs
+* No stretched cards
+* No hidden content
+
+==================================================
+TOPBAR FEATURES
+===============
+
+Currently the top-right navbar contains:
+
+* Profile button
+* Notification button
+* Refresh button
+
+Improve all of them.
+
+---
+
+1. PROFILE DROPDOWN
+
+---
+
+When clicking the profile avatar/button:
+Show a modern animated dropdown menu containing:
+
+* View Profile
+* Edit Profile
+* Account Settings
+* Logout
+
+Requirements:
+
+* Futuristic dropdown style
+* Glassmorphism effect
+* Smooth animation
+* Mobile responsive
+* Close when clicking outside
+* Hover effects
+* Proper icons
+
+---
+
+2. NOTIFICATION DROPDOWN
+
+---
+
+When clicking notification icon:
+Show a dropdown notification panel.
+
+Add dummy notifications such as:
+
+* High temperature detected
+* Device disconnected
+* Maintenance scheduled
+* Backup system activated
+* New report generated
+
+Requirements:
+
+* Scrollable notification list
+* Modern notification card style
+* Notification severity colors
+* Timestamp display
+* Mark as read UI
+* Animated appearance
+* Mobile responsive
+
+---
+
+3. REFRESH BUTTON
+
+---
+
+Refresh icon/button should:
+
+* Refresh current page data/state
+* Simulate real-time refresh
+* Add spinning animation while refreshing
+* Optionally regenerate dummy telemetry data
+* Show subtle loading effect
+
+==================================================
+MONITORING PAGE IDEAS
+=====================
+
+Create:
+
+* Live telemetry charts
+* Real-time metrics
+* Device monitoring panels
+* Animated graphs
+* SCADA system map
+* Sensor status cards
+* Live signal indicators
+* AI monitoring widgets
+
+==================================================
+DEVICES PAGE IDEAS
+==================
+
+Create:
+
+* Device table/grid
+* Device status cards
+* Online/offline indicators
+* Device detail modal
+* Search and filtering
+* Device categories
+* System topology preview
+
+==================================================
+ALERTS PAGE IDEAS
+=================
+
+Create:
+
+* Alert center
+* Alert history
+* Severity filters
+* Alert timeline
+* Acknowledgement buttons
+* Critical warning sections
+* Real-time incoming alert simulation
+
+==================================================
+REPORTS PAGE IDEAS
+==================
+
+Create:
+
+* Analytics dashboard
+* Export buttons
+* Chart summaries
+* Weekly/monthly reports
+* PDF/Excel export UI (dummy only)
+* Performance statistics
+* System uptime analytics
+
+==================================================
+SETTINGS PAGE IDEAS
+===================
+
+Create:
+
+* User preferences
+* SCADA system settings
+* Theme settings
+* Notification settings
+* Security settings
+* Device configuration panels
+* API/System integration sections
+
+==================================================
+TECHNICAL REQUIREMENTS
+======================
+
+Tech stack:
+
+* React
+* TypeScript
+* TailwindCSS
+* Lucide React icons
+* Recharts
+
+Requirements:
+
+* Use reusable components
+* Clean folder structure
+* Modular architecture
+* Proper responsive behavior
+* Smooth transitions
+* No TypeScript errors
+* No layout bugs
+* No console errors
+
+==================================================
+ANIMATION REQUIREMENTS
+======================
+
+Use subtle premium animations:
+
+* Hover glow
+* Fade transitions
+* Slide animations
+* Pulse indicators
+* Smooth dropdown transitions
+* Loading animations
+* Animated charts
+
+Avoid:
+
+* Overly exaggerated animations
+* Laggy motion
+* Cheap-looking effects
+
+==================================================
+IMPORTANT
+=========
+
+The final result should look like a world-class futuristic SCADA / NOC system with extremely polished UI and responsive behavior.
+
+Do NOT make it look generic.
+
+The UI quality should feel close to:
+
+* Enterprise industrial software
+* AI operations centers
+* Smart infrastructure dashboards
+* Cyber futuristic monitoring systems
+
+Focus heavily on:
+
+* UI polish
+* UX quality
+* Responsiveness
+* Consistent visual language
+* Professional appearance
+* Modern interactions

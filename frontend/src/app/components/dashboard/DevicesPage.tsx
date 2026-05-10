@@ -1,216 +1,385 @@
-import { useState } from 'react';
-import { Search, Filter, HardDrive, CheckCircle2, AlertTriangle, XCircle, ChevronRight, Activity, Thermometer, Droplets } from 'lucide-react';
-import * as Dialog from '@radix-ui/react-dialog';
+import { useState } from "react";
+import {
+  Search, Filter, HardDrive, CheckCircle2, AlertTriangle, XCircle, ChevronRight,
+  Activity, Thermometer, Droplets, Cpu, Zap, Clock, Wrench, Power, X, RefreshCw,
+  Wifi, WifiOff, BarChart3, Server, Database, Shield
+} from "lucide-react";
+
+const C = {
+  cyan: "#22d3ee", blue: "#38bdf8", emerald: "#34d399",
+  amber: "#fbbf24", red: "#f87171", purple: "#a78bfa", slate: "#94a3b8",
+};
+
+type DeviceStatus = "online" | "warning" | "offline";
+type DeviceCategory = "all" | "Pump" | "Cooling" | "Power" | "Filter" | "Valve" | "Exchanger" | "Sensor";
 
 const MOCK_DEVICES = [
-  { id: 'DEV-001', name: 'Main Pump Station A', type: 'Pump', status: 'online', health: 98, uptime: '99.9%', lastMaintenance: '2026-04-15' },
-  { id: 'DEV-002', name: 'Cooling Tower B', type: 'Cooling', status: 'warning', health: 75, uptime: '98.5%', lastMaintenance: '2026-03-20' },
-  { id: 'DEV-003', name: 'Primary Generator', type: 'Power', status: 'online', health: 100, uptime: '100%', lastMaintenance: '2026-05-01' },
-  { id: 'DEV-004', name: 'Backup Generator', type: 'Power', status: 'offline', health: 45, uptime: '85.2%', lastMaintenance: '2025-11-10' },
-  { id: 'DEV-005', name: 'Water Filter Unit 1', type: 'Filter', status: 'online', health: 92, uptime: '99.1%', lastMaintenance: '2026-04-28' },
-  { id: 'DEV-006', name: 'Pressure Valve C', type: 'Valve', status: 'warning', health: 68, uptime: '95.4%', lastMaintenance: '2026-02-14' },
-  { id: 'DEV-007', name: 'Heat Exchanger', type: 'Exchanger', status: 'online', health: 89, uptime: '99.7%', lastMaintenance: '2026-04-10' },
+  { id: "DEV-001", name: "Main Pump Station A", type: "Pump", status: "online" as DeviceStatus, health: 98, uptime: "99.9%", lastMaintenance: "2026-04-15", location: "Block A", temp: 42.5, pressure: 120, firmware: "v4.2.1", ip: "192.168.1.11" },
+  { id: "DEV-002", name: "Cooling Tower B", type: "Cooling", status: "warning" as DeviceStatus, health: 75, uptime: "98.5%", lastMaintenance: "2026-03-20", location: "Block B", temp: 68.2, pressure: 95, firmware: "v3.8.0", ip: "192.168.1.12" },
+  { id: "DEV-003", name: "Primary Generator", type: "Power", status: "online" as DeviceStatus, health: 100, uptime: "100%", lastMaintenance: "2026-05-01", location: "Power Plant", temp: 38.1, pressure: 110, firmware: "v5.1.0", ip: "192.168.1.13" },
+  { id: "DEV-004", name: "Backup Generator", type: "Power", status: "offline" as DeviceStatus, health: 45, uptime: "85.2%", lastMaintenance: "2025-11-10", location: "Power Plant", temp: 22.0, pressure: 0, firmware: "v3.1.2", ip: "192.168.1.14" },
+  { id: "DEV-005", name: "Water Filter Unit 1", type: "Filter", status: "online" as DeviceStatus, health: 92, uptime: "99.1%", lastMaintenance: "2026-04-28", location: "Treatment A", temp: 29.5, pressure: 88, firmware: "v4.0.3", ip: "192.168.1.15" },
+  { id: "DEV-006", name: "Pressure Valve C", type: "Valve", status: "warning" as DeviceStatus, health: 68, uptime: "95.4%", lastMaintenance: "2026-02-14", location: "Block C", temp: 51.3, pressure: 142, firmware: "v2.9.1", ip: "192.168.1.16" },
+  { id: "DEV-007", name: "Heat Exchanger", type: "Exchanger", status: "online" as DeviceStatus, health: 89, uptime: "99.7%", lastMaintenance: "2026-04-10", location: "Block A", temp: 77.8, pressure: 105, firmware: "v4.1.0", ip: "192.168.1.17" },
+  { id: "DEV-008", name: "Vibration Sensor M2", type: "Sensor", status: "warning" as DeviceStatus, health: 61, uptime: "93.2%", lastMaintenance: "2026-01-20", location: "Motor Bay", temp: 35.0, pressure: 0, firmware: "v1.8.5", ip: "192.168.1.18" },
+  { id: "DEV-009", name: "Secondary Pump B", type: "Pump", status: "online" as DeviceStatus, health: 96, uptime: "99.3%", lastMaintenance: "2026-04-22", location: "Block B", temp: 44.9, pressure: 118, firmware: "v4.2.0", ip: "192.168.1.19" },
 ];
 
-export function DevicesPage() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDevice, setSelectedDevice] = useState<typeof MOCK_DEVICES[0] | null>(null);
+const STATUS_CONFIG: Record<DeviceStatus, { icon: React.ReactNode; color: string; bg: string; label: string }> = {
+  online: { icon: <CheckCircle2 className="w-4 h-4" />, color: C.emerald, bg: `${C.emerald}15`, label: "Online" },
+  warning: { icon: <AlertTriangle className="w-4 h-4" />, color: C.amber, bg: `${C.amber}15`, label: "Warning" },
+  offline: { icon: <XCircle className="w-4 h-4" />, color: C.red, bg: `${C.red}15`, label: "Offline" },
+};
 
-  const filteredDevices = MOCK_DEVICES.filter(dev => 
-    dev.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    dev.id.toLowerCase().includes(searchTerm.toLowerCase())
+function GlassCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`rounded-2xl ${className}`}
+      style={{
+        background: "linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
+        border: "1px solid rgba(255,255,255,0.08)",
+        backdropFilter: "blur(20px)",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 20px 40px rgba(0,0,0,0.4)",
+      }}>
+      {children}
+    </div>
   );
+}
+
+export function DevicesPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDevice, setSelectedDevice] = useState<typeof MOCK_DEVICES[0] | null>(null);
+  const [category, setCategory] = useState<DeviceCategory>("all");
+  const [viewMode, setViewMode] = useState<"table" | "grid">("table");
+
+  const filtered = MOCK_DEVICES.filter((d) => {
+    const matchSearch = d.name.toLowerCase().includes(searchTerm.toLowerCase()) || d.id.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchCat = category === "all" || d.type === category;
+    return matchSearch && matchCat;
+  });
+
+  const counts = {
+    online: MOCK_DEVICES.filter((d) => d.status === "online").length,
+    warning: MOCK_DEVICES.filter((d) => d.status === "warning").length,
+    offline: MOCK_DEVICES.filter((d) => d.status === "offline").length,
+  };
+
+  const categories: DeviceCategory[] = ["all", "Pump", "Cooling", "Power", "Filter", "Valve", "Exchanger", "Sensor"];
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
+    <div className="max-w-[1800px] mx-auto space-y-5" style={{ animation: "fadeIn 0.4s ease" }}>
+      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Devices & Equipment</h2>
-          <p className="text-muted-foreground">Manage and monitor all connected SCADA hardware.</p>
+          <h2 className="text-2xl font-bold text-white tracking-tight">Devices & Equipment</h2>
+          <p className="text-sm mt-0.5" style={{ color: "#64748b" }}>Manage and monitor all connected SCADA hardware</p>
         </div>
-        <div className="flex gap-2 w-full sm:w-auto">
-          <div className="relative flex-1 sm:w-64">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <input 
-              type="text" 
-              placeholder="Search devices..." 
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-card border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-            />
-          </div>
-          <button className="px-3 py-2 bg-card border border-border rounded-md hover:bg-accent transition-colors flex items-center gap-2 text-sm font-medium">
-            <Filter className="h-4 w-4" />
-            <span className="hidden sm:inline">Filter</span>
-          </button>
-        </div>
+        <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:opacity-80"
+          style={{ background: `${C.cyan}18`, border: `1px solid ${C.cyan}44`, color: C.cyan }}>
+          <RefreshCw className="w-4 h-4" />
+          Sync Devices
+        </button>
       </div>
 
-      <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-muted/50 text-muted-foreground uppercase text-xs">
-              <tr>
-                <th className="px-6 py-4 font-medium">Device ID</th>
-                <th className="px-6 py-4 font-medium">Name</th>
-                <th className="px-6 py-4 font-medium">Type</th>
-                <th className="px-6 py-4 font-medium">Status</th>
-                <th className="px-6 py-4 font-medium">Health</th>
-                <th className="px-6 py-4 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {filteredDevices.map(device => (
-                <tr key={device.id} className="hover:bg-muted/30 transition-colors group">
-                  <td className="px-6 py-4 font-medium text-foreground">{device.id}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <HardDrive className="h-4 w-4 text-muted-foreground" />
-                      {device.name}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-muted-foreground">{device.type}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-1.5">
-                      {device.status === 'online' && <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
-                      {device.status === 'warning' && <AlertTriangle className="h-4 w-4 text-amber-500" />}
-                      {device.status === 'offline' && <XCircle className="h-4 w-4 text-rose-500" />}
-                      <span className="capitalize">{device.status}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-2 rounded-full bg-muted overflow-hidden">
-                        <div 
-                          className={`h-full ${device.health > 80 ? 'bg-emerald-500' : device.health > 50 ? 'bg-amber-500' : 'bg-rose-500'}`} 
-                          style={{ width: `${device.health}%` }}
-                        />
-                      </div>
-                      <span className="text-xs font-medium">{device.health}%</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button 
-                      onClick={() => setSelectedDevice(device)}
-                      className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <ChevronRight className="h-5 w-5" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {filteredDevices.length === 0 && (
-            <div className="p-8 text-center text-muted-foreground">
-              No devices found matching "{searchTerm}"
+      {/* Stats row */}
+      <div className="grid grid-cols-3 sm:grid-cols-3 gap-3">
+        {[
+          { label: "Online", count: counts.online, color: C.emerald, icon: <CheckCircle2 className="w-5 h-5" /> },
+          { label: "Warning", count: counts.warning, color: C.amber, icon: <AlertTriangle className="w-5 h-5" /> },
+          { label: "Offline", count: counts.offline, color: C.red, icon: <XCircle className="w-5 h-5" /> },
+        ].map((s) => (
+          <GlassCard key={s.label} className="p-4 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{ background: `${s.color}20`, color: s.color }}>
+              {s.icon}
             </div>
-          )}
-        </div>
+            <div>
+              <p className="text-2xl font-bold text-white">{s.count}</p>
+              <p className="text-xs" style={{ color: "#64748b" }}>{s.label}</p>
+            </div>
+          </GlassCard>
+        ))}
       </div>
 
-      <Dialog.Root open={!!selectedDevice} onOpenChange={(open) => !open && setSelectedDevice(null)}>
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 animate-in fade-in" />
-          <Dialog.Content className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[95vw] max-w-2xl bg-card border border-border shadow-xl rounded-xl p-0 z-50 overflow-hidden animate-in fade-in zoom-in-95">
-            {selectedDevice && (
-              <>
-                <div className="p-6 border-b border-border flex justify-between items-start bg-muted/20">
-                  <div>
-                    <Dialog.Title className="text-2xl font-bold mb-1 flex items-center gap-2">
-                      {selectedDevice.name}
-                      {selectedDevice.status === 'online' && <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 text-xs border border-emerald-500/20 uppercase tracking-wider">Online</span>}
-                      {selectedDevice.status === 'warning' && <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 text-xs border border-amber-500/20 uppercase tracking-wider">Warning</span>}
-                      {selectedDevice.status === 'offline' && <span className="px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-500 text-xs border border-rose-500/20 uppercase tracking-wider">Offline</span>}
-                    </Dialog.Title>
-                    <Dialog.Description className="text-muted-foreground">
-                      ID: {selectedDevice.id} | Type: {selectedDevice.type}
-                    </Dialog.Description>
-                  </div>
-                  <Dialog.Close asChild>
-                    <button className="p-2 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground">
-                      <XCircle className="h-5 w-5" />
-                    </button>
-                  </Dialog.Close>
-                </div>
-                
-                <div className="p-6 grid md:grid-cols-2 gap-6">
-                  <div className="space-y-6">
-                    <div>
-                      <h4 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">Device Health</h4>
-                      <div className="bg-muted/30 p-4 rounded-lg border border-border flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Activity className="h-8 w-8 text-primary" />
+      {/* Filters & search */}
+      <GlassCard className="p-4">
+        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => (
+              <button key={cat} onClick={() => setCategory(cat)}
+                className="px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-all"
+                style={{
+                  background: category === cat ? `${C.cyan}20` : "rgba(255,255,255,0.05)",
+                  border: `1px solid ${category === cat ? C.cyan + "44" : "rgba(255,255,255,0.08)"}`,
+                  color: category === cat ? C.cyan : "#64748b",
+                }}>
+                {cat === "all" ? `All (${MOCK_DEVICES.length})` : cat}
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <div className="relative flex-1 sm:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "#475569" }} />
+              <input type="text" placeholder="Search devices..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 rounded-xl text-sm text-white outline-none transition-all focus:ring-1 placeholder-slate-600"
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", ringColor: C.cyan }} />
+            </div>
+            <div className="flex gap-1 p-1 rounded-xl" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
+              <button onClick={() => setViewMode("table")}
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all"
+                style={{ background: viewMode === "table" ? `${C.cyan}20` : "transparent", color: viewMode === "table" ? C.cyan : "#64748b" }}>
+                <Filter className="w-4 h-4" />
+              </button>
+              <button onClick={() => setViewMode("grid")}
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all"
+                style={{ background: viewMode === "grid" ? `${C.cyan}20` : "transparent", color: viewMode === "grid" ? C.cyan : "#64748b" }}>
+                <BarChart3 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </GlassCard>
+
+      {/* Device list */}
+      {viewMode === "table" ? (
+        <GlassCard className="overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                <tr>
+                  {["Device ID", "Name & Location", "Type", "Status", "Health", "Uptime", ""].map((h) => (
+                    <th key={h} className="px-5 py-3.5 text-[10px] font-semibold uppercase tracking-wider" style={{ color: "#475569" }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((device, i) => {
+                  const sc = STATUS_CONFIG[device.status];
+                  return (
+                    <tr key={device.id} className="group transition-all cursor-pointer"
+                      style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
+                      onClick={() => setSelectedDevice(device)}>
+                      <td className="px-5 py-4">
+                        <span className="text-xs font-mono font-medium px-2 py-1 rounded-md"
+                          style={{ background: "rgba(255,255,255,0.05)", color: "#64748b" }}>
+                          {device.id}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                            style={{ background: `${sc.color}15`, color: sc.color }}>
+                            <HardDrive className="w-4 h-4" />
+                          </div>
                           <div>
-                            <p className="text-sm text-muted-foreground">Overall Status</p>
-                            <p className="text-2xl font-bold">{selectedDevice.health}%</p>
+                            <p className="text-sm font-medium text-white group-hover:text-cyan-400 transition-colors">{device.name}</p>
+                            <p className="text-[10px]" style={{ color: "#475569" }}>{device.location}</p>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-sm text-muted-foreground">Uptime</p>
-                          <p className="text-xl font-medium">{selectedDevice.uptime}</p>
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className="text-xs px-2 py-1 rounded-md" style={{ background: "rgba(255,255,255,0.05)", color: "#94a3b8" }}>{device.type}</span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg w-fit"
+                          style={{ background: sc.bg, color: sc.color }}>
+                          {sc.icon}
+                          <span className="text-xs font-medium">{sc.label}</span>
                         </div>
-                      </div>
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-2">
+                          <div className="w-20 h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                            <div className="h-full rounded-full transition-all duration-700"
+                              style={{ width: `${device.health}%`, background: device.health > 80 ? C.emerald : device.health > 50 ? C.amber : C.red }} />
+                          </div>
+                          <span className="text-xs font-semibold text-white">{device.health}%</span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4 text-sm" style={{ color: "#64748b" }}>{device.uptime}</td>
+                      <td className="px-5 py-4 text-right">
+                        <button className="w-8 h-8 rounded-lg flex items-center justify-center ml-auto transition-all hover:bg-white/08 group-hover:text-cyan-400"
+                          style={{ color: "#475569" }}>
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            {filtered.length === 0 && (
+              <div className="py-16 text-center" style={{ color: "#475569" }}>
+                <Server className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                <p className="text-sm">No devices found matching "{searchTerm}"</p>
+              </div>
+            )}
+          </div>
+        </GlassCard>
+      ) : (
+        <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+          {filtered.map((device) => {
+            const sc = STATUS_CONFIG[device.status];
+            return (
+              <GlassCard key={device.id} className="p-4 cursor-pointer group transition-all hover:scale-[1.02]"
+                onClick={() => setSelectedDevice(device)}>
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+                      style={{ background: `${sc.color}15`, color: sc.color }}>
+                      <HardDrive className="w-5 h-5" />
                     </div>
-                    
                     <div>
-                      <h4 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">Telemetry</h4>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="bg-muted/30 p-3 rounded-lg border border-border">
-                          <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                            <Thermometer className="h-4 w-4" />
-                            <span className="text-xs font-medium">Temp</span>
-                          </div>
-                          <p className="text-lg font-bold">42.5°C</p>
-                        </div>
-                        <div className="bg-muted/30 p-3 rounded-lg border border-border">
-                          <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                            <Droplets className="h-4 w-4" />
-                            <span className="text-xs font-medium">Pressure</span>
-                          </div>
-                          <p className="text-lg font-bold">120 PSI</p>
-                        </div>
-                      </div>
+                      <p className="text-sm font-semibold text-white group-hover:text-cyan-400 transition-colors">{device.name}</p>
+                      <p className="text-[10px]" style={{ color: "#475569" }}>{device.id} · {device.location}</p>
                     </div>
                   </div>
-                  
-                  <div className="space-y-6">
-                    <div>
-                      <h4 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">Maintenance</h4>
-                      <div className="bg-muted/30 p-4 rounded-lg border border-border space-y-3">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Last Serviced</span>
-                          <span className="text-sm font-medium">{selectedDevice.lastMaintenance}</span>
-                        </div>
-                        <div className="w-full h-px bg-border" />
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-muted-foreground">Next Scheduled</span>
-                          <span className="text-sm font-medium text-amber-500">In 14 days</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h4 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">Actions</h4>
-                      <div className="space-y-2">
-                        <button className="w-full py-2 px-4 bg-primary text-primary-foreground rounded-md font-medium hover:opacity-90 transition-opacity">
-                          Run Diagnostics
-                        </button>
-                        <button className="w-full py-2 px-4 bg-card border border-border text-foreground rounded-md font-medium hover:bg-accent transition-colors">
-                          Schedule Maintenance
-                        </button>
-                        <button className="w-full py-2 px-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-md font-medium hover:bg-rose-500/20 transition-colors">
-                          Emergency Shutdown
-                        </button>
-                      </div>
-                    </div>
+                  <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium"
+                    style={{ background: sc.bg, color: sc.color }}>
+                    {sc.icon}
                   </div>
                 </div>
-              </>
-            )}
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                  <div className="p-2 rounded-lg" style={{ background: "rgba(255,255,255,0.03)" }}>
+                    <p className="text-[9px] mb-0.5" style={{ color: "#475569" }}>Temp</p>
+                    <p className="text-sm font-bold text-white">{device.temp}°C</p>
+                  </div>
+                  <div className="p-2 rounded-lg" style={{ background: "rgba(255,255,255,0.03)" }}>
+                    <p className="text-[9px] mb-0.5" style={{ color: "#475569" }}>Pressure</p>
+                    <p className="text-sm font-bold text-white">{device.pressure} PSI</p>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[9px]" style={{ color: "#475569" }}>Health Score</span>
+                    <span className="text-[9px] font-semibold" style={{ color: device.health > 80 ? C.emerald : device.health > 50 ? C.amber : C.red }}>{device.health}%</span>
+                  </div>
+                  <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                    <div className="h-full rounded-full transition-all duration-700"
+                      style={{ width: `${device.health}%`, background: device.health > 80 ? C.emerald : device.health > 50 ? C.amber : C.red }} />
+                  </div>
+                </div>
+              </GlassCard>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Device detail modal */}
+      {selectedDevice && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ animation: "fadeIn 0.2s ease" }}>
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setSelectedDevice(null)} />
+          <div className="relative w-full max-w-2xl rounded-2xl overflow-hidden" style={{ animation: "slideUp 0.25s ease", background: "linear-gradient(135deg, #0a0e27, #060810)", border: "1px solid rgba(255,255,255,0.12)", boxShadow: "0 40px 100px rgba(0,0,0,0.7)" }}>
+            {/* Modal header */}
+            <div className="flex items-start justify-between p-6" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center"
+                  style={{ background: `${STATUS_CONFIG[selectedDevice.status].color}20`, color: STATUS_CONFIG[selectedDevice.status].color }}>
+                  <HardDrive className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">{selectedDevice.name}</h3>
+                  <p className="text-xs" style={{ color: "#64748b" }}>{selectedDevice.id} · {selectedDevice.type} · {selectedDevice.location}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium"
+                  style={{ background: STATUS_CONFIG[selectedDevice.status].bg, color: STATUS_CONFIG[selectedDevice.status].color }}>
+                  {STATUS_CONFIG[selectedDevice.status].icon}
+                  {STATUS_CONFIG[selectedDevice.status].label}
+                </div>
+                <button onClick={() => setSelectedDevice(null)} className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-white/08" style={{ color: "#64748b" }}>
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal body */}
+            <div className="p-6 grid md:grid-cols-2 gap-5">
+              <div className="space-y-4">
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: "#475569" }}>Live Telemetry</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { icon: <Thermometer className="w-4 h-4" />, label: "Temperature", value: `${selectedDevice.temp}°C`, color: C.red },
+                      { icon: <Droplets className="w-4 h-4" />, label: "Pressure", value: `${selectedDevice.pressure} PSI`, color: C.blue },
+                      { icon: <Activity className="w-4 h-4" />, label: "Health", value: `${selectedDevice.health}%`, color: C.emerald },
+                      { icon: <Cpu className="w-4 h-4" />, label: "Uptime", value: selectedDevice.uptime, color: C.cyan },
+                    ].map((m) => (
+                      <div key={m.label} className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                        <div className="flex items-center gap-1.5 mb-1.5" style={{ color: m.color }}>
+                          {m.icon}
+                          <span className="text-[10px] font-medium" style={{ color: "#64748b" }}>{m.label}</span>
+                        </div>
+                        <p className="text-lg font-bold text-white">{m.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: "#475569" }}>System Info</p>
+                  <div className="space-y-2 p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                    {[
+                      { label: "IP Address", value: selectedDevice.ip },
+                      { label: "Firmware", value: selectedDevice.firmware },
+                      { label: "Last Serviced", value: selectedDevice.lastMaintenance },
+                      { label: "Next Service", value: "In 14 days" },
+                    ].map((row) => (
+                      <div key={row.label} className="flex justify-between items-center py-1" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                        <span className="text-xs" style={{ color: "#64748b" }}>{row.label}</span>
+                        <span className="text-xs font-medium text-white">{row.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: "#475569" }}>Health Score</p>
+                  <div className="p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-3xl font-bold text-white">{selectedDevice.health}%</span>
+                      <div className={`text-xs px-2 py-1 rounded-lg font-medium`}
+                        style={{ background: selectedDevice.health > 80 ? `${C.emerald}20` : `${C.amber}20`, color: selectedDevice.health > 80 ? C.emerald : C.amber }}>
+                        {selectedDevice.health > 80 ? "Good" : "Degraded"}
+                      </div>
+                    </div>
+                    <div className="h-2 rounded-full overflow-hidden mb-2" style={{ background: "rgba(255,255,255,0.06)" }}>
+                      <div className="h-full rounded-full transition-all duration-700"
+                        style={{ width: `${selectedDevice.health}%`, background: selectedDevice.health > 80 ? C.emerald : selectedDevice.health > 50 ? C.amber : C.red }} />
+                    </div>
+                    <p className="text-[10px]" style={{ color: "#475569" }}>Uptime: {selectedDevice.uptime}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: "#475569" }}>Actions</p>
+                  <div className="space-y-2">
+                    <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-80"
+                      style={{ background: `${C.cyan}20`, border: `1px solid ${C.cyan}44`, color: C.cyan }}>
+                      <Activity className="w-4 h-4" />Run Diagnostics
+                    </button>
+                    <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all hover:bg-white/08"
+                      style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", color: "#94a3b8" }}>
+                      <Wrench className="w-4 h-4" />Schedule Maintenance
+                    </button>
+                    <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all hover:bg-red-500/20"
+                      style={{ background: `${C.red}12`, border: `1px solid ${C.red}30`, color: C.red }}>
+                      <Power className="w-4 h-4" />Emergency Shutdown
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px) } to { opacity: 1; transform: translateY(0) } }
+      `}</style>
     </div>
   );
 }
