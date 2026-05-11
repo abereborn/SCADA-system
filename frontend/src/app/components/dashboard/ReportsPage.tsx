@@ -1,17 +1,16 @@
 import { useState } from "react";
-import {
-  Download, FileText, FileSpreadsheet, Calendar, Filter,
-  BarChart3, LineChart as LineChartIcon, TrendingUp, TrendingDown,
-  Clock, Activity, Zap, Droplet, Gauge
-} from "lucide-react";
-import {
-  LineChart, Line, BarChart, Bar, AreaChart, Area,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
-} from "recharts";
+import { Download, FileText, FileSpreadsheet, TrendingUp, TrendingDown, Clock, Activity, Zap, Droplet, Gauge, BarChart3, LineChart as LineChartIcon } from "lucide-react";
+import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { useTheme } from "../ThemeProvider";
 
 const C = {
-  cyan: "#22d3ee", blue: "#38bdf8", emerald: "#34d399",
-  amber: "#fbbf24", red: "#f87171", purple: "#a78bfa", slate: "#94a3b8",
+  cyan: "#22d3ee",
+  blue: "#38bdf8",
+  emerald: "#34d399",
+  amber: "#fbbf24",
+  red: "#f87171",
+  purple: "#a78bfa",
+  slate: "#94a3b8",
 };
 
 const DAILY_DATA = [
@@ -62,36 +61,53 @@ type ChartType = "line" | "bar" | "area";
 type Metric = "temp" | "pressure" | "flow" | "voltage";
 type DateRange = "daily" | "weekly" | "monthly";
 
-function GlassCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={`rounded-2xl ${className}`}
-      style={{
-        background: "linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
-        border: "1px solid rgba(255,255,255,0.08)",
-        backdropFilter: "blur(20px)",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 20px 40px rgba(0,0,0,0.4)",
-      }}>
+export function ReportsPage() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
+  const T = {
+    textPrimary: isDark ? "#ffffff" : "#0f172a",
+    textSec: isDark ? "#64748b" : "#94a3b8",
+    textMuted: isDark ? "#475569" : "#94a3b8",
+    cardBg: isDark ? "linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))" : "linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85))",
+    cardBorder: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)",
+    cardShadow: isDark ? "inset 0 1px 0 rgba(255,255,255,0.06), 0 20px 40px rgba(0,0,0,0.4)" : "0 4px 20px rgba(0,0,0,0.07)",
+    divider: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.07)",
+    pillBg: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
+    pillBorder: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)",
+    btnSecBg: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)",
+    btnSecBorder: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)",
+    gridStroke: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.06)",
+    axisTick: isDark ? "#475569" : "#94a3b8",
+    tooltipBg: isDark ? "#0d1117" : "#ffffff",
+    tooltipBorder: isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.1)",
+    rowHover: isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)",
+    badgeBg: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
+  };
+
+  const GlassCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+    <div className={`rounded-2xl ${className}`} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, backdropFilter: "blur(20px)", boxShadow: T.cardShadow }}>
       {children}
     </div>
   );
-}
 
-function CustomTooltip({ active, payload, label }: any) {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="px-3 py-2 rounded-xl border text-xs" style={{ background: "#0d1117", borderColor: "rgba(255,255,255,0.12)", color: "#e2e8f0" }}>
-      <p className="mb-1.5" style={{ color: "#64748b" }}>{label}</p>
-      {payload.map((p: any) => (
-        <p key={p.name} className="flex items-center gap-1.5 mb-0.5" style={{ color: p.color }}>
-          <span className="w-2 h-2 rounded-full inline-block" style={{ background: p.color }} />
-          {p.name}: <span className="font-semibold">{typeof p.value === "number" ? p.value.toFixed(1) : p.value}</span>
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (!active || !payload?.length) return null;
+    return (
+      <div className="px-3 py-2 rounded-xl border text-xs" style={{ background: T.tooltipBg, borderColor: T.tooltipBorder, color: T.textPrimary }}>
+        <p className="mb-1.5" style={{ color: T.textSec }}>
+          {label}
         </p>
-      ))}
-    </div>
-  );
-}
+        {payload.map((p: any) => (
+          <p key={p.name} className="flex items-center gap-1.5 mb-0.5" style={{ color: p.color }}>
+            <span className="w-2 h-2 rounded-full inline-block" style={{ background: p.color }} />
+            {p.name}: <span className="font-semibold">{typeof p.value === "number" ? p.value.toFixed(1) : p.value}</span>
+          </p>
+        ))}
+      </div>
+    );
+  };
 
-export function ReportsPage() {
   const [chartType, setChartType] = useState<ChartType>("area");
   const [metric, setMetric] = useState<Metric>("temp");
   const [dateRange, setDateRange] = useState<DateRange>("weekly");
@@ -110,49 +126,43 @@ export function ReportsPage() {
   };
 
   const chartData = dateRange === "daily" ? DAILY_DATA : dateRange === "weekly" ? WEEKLY_DATA : MONTHLY_DATA;
+  const axisProps = { tick: { fontSize: 10, fill: T.axisTick }, tickLine: false, axisLine: false };
+  const commonProps = { data: chartData, margin: { top: 5, right: 10, left: -20, bottom: 5 } };
+  const mc = metricConfig[metric];
 
   const renderChart = () => {
-    const mc = metricConfig[metric];
-    const commonProps = {
-      data: chartData,
-      margin: { top: 5, right: 10, left: -20, bottom: 5 },
-    };
-    const axisProps = {
-      tick: { fontSize: 10, fill: "#475569" },
-      tickLine: false,
-      axisLine: false,
-    };
-
-    if (chartType === "area") return (
-      <AreaChart {...commonProps}>
-        <defs>
-          <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={mc.color} stopOpacity={0.3} />
-            <stop offset="100%" stopColor={mc.color} stopOpacity={0} />
-          </linearGradient>
-        </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-        <XAxis dataKey="time" {...axisProps} />
-        <YAxis {...axisProps} />
-        <Tooltip content={<CustomTooltip />} />
-        <Area type="monotone" dataKey={metric} name={mc.label} stroke={mc.color} fill="url(#areaGrad)" strokeWidth={2} dot={{ r: 3, fill: mc.color }} activeDot={{ r: 5 }} />
-      </AreaChart>
-    );
-    if (chartType === "line") return (
-      <LineChart {...commonProps}>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-        <XAxis dataKey="time" {...axisProps} />
-        <YAxis {...axisProps} />
-        <Tooltip content={<CustomTooltip />} />
-        <Line type="monotone" dataKey={metric} name={mc.label} stroke={mc.color} strokeWidth={2} dot={{ r: 3, fill: mc.color }} activeDot={{ r: 5 }} />
-      </LineChart>
-    );
+    if (chartType === "area")
+      return (
+        <AreaChart {...commonProps}>
+          <defs>
+            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={mc.color} stopOpacity={0.3} />
+              <stop offset="100%" stopColor={mc.color} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke={T.gridStroke} />
+          <XAxis dataKey="time" {...axisProps} />
+          <YAxis {...axisProps} />
+          <Tooltip content={<CustomTooltip />} />
+          <Area type="monotone" dataKey={metric} name={mc.label} stroke={mc.color} fill="url(#areaGrad)" strokeWidth={2} dot={{ r: 3, fill: mc.color }} activeDot={{ r: 5 }} />
+        </AreaChart>
+      );
+    if (chartType === "line")
+      return (
+        <LineChart {...commonProps}>
+          <CartesianGrid strokeDasharray="3 3" stroke={T.gridStroke} />
+          <XAxis dataKey="time" {...axisProps} />
+          <YAxis {...axisProps} />
+          <Tooltip content={<CustomTooltip />} />
+          <Line type="monotone" dataKey={metric} name={mc.label} stroke={mc.color} strokeWidth={2} dot={{ r: 3, fill: mc.color }} activeDot={{ r: 5 }} />
+        </LineChart>
+      );
     return (
       <BarChart {...commonProps}>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke={T.gridStroke} vertical={false} />
         <XAxis dataKey="time" {...axisProps} />
         <YAxis {...axisProps} />
-        <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
+        <Tooltip content={<CustomTooltip />} cursor={{ fill: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)" }} />
         <Bar dataKey={metric} name={mc.label} fill={mc.color} radius={[4, 4, 0, 0]} fillOpacity={0.85} />
       </BarChart>
     );
@@ -160,29 +170,37 @@ export function ReportsPage() {
 
   return (
     <div className="max-w-[1400px] mx-auto space-y-5" style={{ animation: "fadeIn 0.4s ease" }}>
-      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">System Reports</h2>
-          <p className="text-sm mt-0.5" style={{ color: "#64748b" }}>Generate, view, and export historical telemetry data</p>
+          <h2 className="text-2xl font-bold tracking-tight" style={{ color: T.textPrimary }}>
+            System Reports
+          </h2>
+          <p className="text-sm mt-0.5" style={{ color: T.textSec }}>
+            Generate, view, and export historical telemetry data
+          </p>
         </div>
         <div className="flex gap-2">
-          <button onClick={() => handleExport("CSV")} disabled={!!exporting}
+          <button
+            onClick={() => handleExport("CSV")}
+            disabled={!!exporting}
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:opacity-80 disabled:opacity-50"
-            style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#94a3b8" }}>
+            style={{ background: T.btnSecBg, border: `1px solid ${T.btnSecBorder}`, color: T.textSec }}
+          >
             <FileSpreadsheet className="w-4 h-4" />
             {exporting === "CSV" ? "Exporting..." : "CSV"}
           </button>
-          <button onClick={() => handleExport("PDF")} disabled={!!exporting}
+          <button
+            onClick={() => handleExport("PDF")}
+            disabled={!!exporting}
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:opacity-80 disabled:opacity-50"
-            style={{ background: `${C.cyan}20`, border: `1px solid ${C.cyan}44`, color: C.cyan }}>
+            style={{ background: `${C.cyan}20`, border: `1px solid ${C.cyan}44`, color: C.cyan }}
+          >
             <FileText className="w-4 h-4" />
             {exporting === "PDF" ? "Generating..." : "Export PDF"}
           </button>
         </div>
       </div>
 
-      {/* Summary stats */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         {SUMMARY_STATS.map((s) => (
           <GlassCard key={s.label} className="p-4">
@@ -195,38 +213,56 @@ export function ReportsPage() {
                 {s.trend}
               </div>
             </div>
-            <p className="text-2xl font-bold text-white">{s.value}<span className="text-sm font-normal ml-1" style={{ color: "#64748b" }}>{s.unit}</span></p>
-            <p className="text-xs mt-1" style={{ color: "#64748b" }}>{s.label}</p>
+            <p className="text-2xl font-bold" style={{ color: T.textPrimary }}>
+              {s.value}
+              <span className="text-sm font-normal ml-1" style={{ color: T.textSec }}>
+                {s.unit}
+              </span>
+            </p>
+            <p className="text-xs mt-1" style={{ color: T.textSec }}>
+              {s.label}
+            </p>
           </GlassCard>
         ))}
       </div>
 
-      {/* Main chart */}
       <GlassCard className="p-5">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5">
           <div>
-            <h3 className="text-sm font-semibold text-white">Historical Data View</h3>
-            <p className="text-xs mt-0.5" style={{ color: "#64748b" }}>
+            <h3 className="text-sm font-semibold" style={{ color: T.textPrimary }}>
+              Historical Data View
+            </h3>
+            <p className="text-xs mt-0.5" style={{ color: T.textSec }}>
               {metricConfig[metric].label} · {dateRange.charAt(0).toUpperCase() + dateRange.slice(1)} View
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            {/* Date range */}
-            <div className="flex gap-1 p-1 rounded-xl" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
+            <div className="flex gap-1 p-1 rounded-xl" style={{ background: T.pillBg, border: `1px solid ${T.pillBorder}` }}>
               {(["daily", "weekly", "monthly"] as DateRange[]).map((r) => (
-                <button key={r} onClick={() => setDateRange(r)}
+                <button
+                  key={r}
+                  onClick={() => setDateRange(r)}
                   className="px-3 py-1 rounded-lg text-xs font-medium capitalize transition-all"
-                  style={{ background: dateRange === r ? `${C.cyan}20` : "transparent", color: dateRange === r ? C.cyan : "#64748b" }}>
+                  style={{ background: dateRange === r ? `${C.cyan}20` : "transparent", color: dateRange === r ? C.cyan : T.textSec }}
+                >
                   {r}
                 </button>
               ))}
             </div>
-            {/* Chart type */}
-            <div className="flex gap-1 p-1 rounded-xl" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
-              {([["area", <Activity className="w-4 h-4" />], ["line", <LineChartIcon className="w-4 h-4" />], ["bar", <BarChart3 className="w-4 h-4" />]] as [ChartType, React.ReactNode][]).map(([t, icon]) => (
-                <button key={t} onClick={() => setChartType(t)}
+            <div className="flex gap-1 p-1 rounded-xl" style={{ background: T.pillBg, border: `1px solid ${T.pillBorder}` }}>
+              {(
+                [
+                  ["area", <Activity className="w-4 h-4" />],
+                  ["line", <LineChartIcon className="w-4 h-4" />],
+                  ["bar", <BarChart3 className="w-4 h-4" />],
+                ] as [ChartType, React.ReactNode][]
+              ).map(([t, icon]) => (
+                <button
+                  key={t}
+                  onClick={() => setChartType(t)}
                   className="w-8 h-8 flex items-center justify-center rounded-lg transition-all"
-                  style={{ background: chartType === t ? `${C.cyan}20` : "transparent", color: chartType === t ? C.cyan : "#64748b" }}>
+                  style={{ background: chartType === t ? `${C.cyan}20` : "transparent", color: chartType === t ? C.cyan : T.textSec }}
+                >
                   {icon}
                 </button>
               ))}
@@ -234,18 +270,20 @@ export function ReportsPage() {
           </div>
         </div>
 
-        {/* Metric selector */}
         <div className="flex flex-wrap gap-2 mb-4">
-          {(Object.entries(metricConfig) as [Metric, typeof metricConfig[Metric]][]).map(([key, mc]) => (
-            <button key={key} onClick={() => setMetric(key)}
+          {(Object.entries(metricConfig) as [Metric, (typeof metricConfig)[Metric]][]).map(([key, mcfg]) => (
+            <button
+              key={key}
+              onClick={() => setMetric(key)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
               style={{
-                background: metric === key ? `${mc.color}22` : "rgba(255,255,255,0.05)",
-                border: `1px solid ${metric === key ? mc.color + "44" : "rgba(255,255,255,0.08)"}`,
-                color: metric === key ? mc.color : "#64748b",
-              }}>
-              <span className="w-2 h-2 rounded-full" style={{ background: mc.color }} />
-              {mc.label}
+                background: metric === key ? `${mcfg.color}22` : T.pillBg,
+                border: `1px solid ${metric === key ? mcfg.color + "44" : T.pillBorder}`,
+                color: metric === key ? mcfg.color : T.textSec,
+              }}
+            >
+              <span className="w-2 h-2 rounded-full" style={{ background: mcfg.color }} />
+              {mcfg.label}
             </button>
           ))}
         </div>
@@ -257,37 +295,55 @@ export function ReportsPage() {
         </div>
       </GlassCard>
 
-      {/* Saved reports */}
       <GlassCard className="overflow-hidden">
-        <div className="px-5 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-          <h3 className="text-sm font-semibold text-white">Saved Reports</h3>
-          <p className="text-xs mt-0.5" style={{ color: "#64748b" }}>Recently generated reports available for download</p>
+        <div className="px-5 py-4" style={{ borderBottom: `1px solid ${T.divider}` }}>
+          <h3 className="text-sm font-semibold" style={{ color: T.textPrimary }}>
+            Saved Reports
+          </h3>
+          <p className="text-xs mt-0.5" style={{ color: T.textSec }}>
+            Recently generated reports available for download
+          </p>
         </div>
-        <div className="divide-y" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
+        <div>
           {REPORT_ITEMS.map((report) => (
-            <div key={report.name} className="flex items-center justify-between px-5 py-3.5 group transition-all hover:bg-white/03">
+            <div
+              key={report.name}
+              className="flex items-center justify-between px-5 py-3.5 transition-all"
+              style={{ borderBottom: `1px solid ${T.divider}` }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = T.rowHover)}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+            >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: report.type === "PDF" ? `${C.red}15` : `${C.emerald}15`, color: report.type === "PDF" ? C.red : C.emerald }}>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: report.type === "PDF" ? `${C.red}15` : `${C.emerald}15`, color: report.type === "PDF" ? C.red : C.emerald }}>
                   {report.type === "PDF" ? <FileText className="w-4 h-4" /> : <FileSpreadsheet className="w-4 h-4" />}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-white">{report.name}</p>
-                  <p className="text-[10px]" style={{ color: "#475569" }}>
-                    <Clock className="w-2.5 h-2.5 inline mr-1" />{report.date} · {report.size}
+                  <p className="text-sm font-medium" style={{ color: T.textPrimary }}>
+                    {report.name}
+                  </p>
+                  <p className="text-[10px]" style={{ color: T.textMuted }}>
+                    <Clock className="w-2.5 h-2.5 inline mr-1" />
+                    {report.date} · {report.size}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] px-2 py-0.5 rounded-md" style={{ background: "rgba(255,255,255,0.05)", color: "#64748b" }}>{report.type}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-md" style={{ background: T.badgeBg, color: T.textSec }}>
+                  {report.type}
+                </span>
                 {report.status === "ready" ? (
-                  <button onClick={() => handleExport(report.name)}
+                  <button
+                    onClick={() => handleExport(report.name)}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:opacity-80"
-                    style={{ background: `${C.cyan}18`, border: `1px solid ${C.cyan}33`, color: C.cyan }}>
-                    <Download className="w-3.5 h-3.5" />Download
+                    style={{ background: `${C.cyan}18`, border: `1px solid ${C.cyan}33`, color: C.cyan }}
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    Download
                   </button>
                 ) : (
-                  <span className="text-xs px-2 py-1 rounded-lg" style={{ background: `${C.amber}15`, color: C.amber }}>Processing…</span>
+                  <span className="text-xs px-2 py-1 rounded-lg" style={{ background: `${C.amber}15`, color: C.amber }}>
+                    Processing…
+                  </span>
                 )}
               </div>
             </div>

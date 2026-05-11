@@ -26,7 +26,10 @@ import {
   CheckCircle2,
   Info,
   Wifi,
+  Sun,
+  Moon,
 } from "lucide-react";
+import { useTheme } from "./ThemeProvider";
 
 const C = {
   cyan: "#22d3ee",
@@ -72,77 +75,62 @@ function PulseDot({ color = C.emerald, size = 8 }: { color?: string; size?: numb
   );
 }
 
-function Sidebar({ open, onClose, collapsed, onToggleCollapsed }: { open: boolean; onClose: () => void; collapsed: boolean; onToggleCollapsed: () => void }) {
+function Sidebar({ open, onClose, collapsed, onToggleCollapsed, isDark }: { open: boolean; onClose: () => void; collapsed: boolean; onToggleCollapsed: () => void; isDark: boolean }) {
   const navigate = useNavigate();
+
+  const sidebarBg = isDark ? "linear-gradient(180deg, #0a0e27 0%, #080c1e 100%)" : "linear-gradient(180deg, #f1f5fb 0%, #e8edf7 100%)";
+  const borderColor = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)";
+  const labelColor = isDark ? "#475569" : "#94a3b8";
+  const navInactiveColor = isDark ? "#64748b" : "#64748b";
+  const textPrimary = isDark ? "#ffffff" : "#0f172a";
+  const textMuted = isDark ? "#475569" : "#94a3b8";
+  const advancedHover = isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)";
 
   return (
     <>
-      {/* Mobile overlay */}
-      {open && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
-          onClick={onClose}
-        />
-      )}
+      {open && <div className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40" onClick={onClose} />}
 
-      {/* Sidebar panel */}
       <aside
-        className={`
-          fixed inset-y-0 left-0 z-50 flex flex-col h-full transition-all duration-300
-          lg:relative lg:translate-x-0
-          ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-        `}
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col h-full transition-all duration-300 lg:relative lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
         style={{
           width: collapsed ? 72 : 260,
-          background: "linear-gradient(180deg, #0a0e27 0%, #080c1e 100%)",
-          borderRight: "1px solid rgba(255,255,255,0.07)",
-          boxShadow: open ? "4px 0 40px rgba(0,0,0,0.6)" : "none",
+          background: sidebarBg,
+          borderRight: `1px solid ${borderColor}`,
+          boxShadow: open ? "4px 0 40px rgba(0,0,0,0.3)" : "none",
         }}
       >
-        {/* Logo */}
-        <div
-          className="flex items-center justify-between px-4 h-16 flex-shrink-0"
-          style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
-        >
+        <div className="flex items-center justify-between px-4 h-16 flex-shrink-0" style={{ borderBottom: `1px solid ${borderColor}` }}>
           {!collapsed && (
             <div className="flex items-center gap-2.5">
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: `${C.cyan}22`, border: `1px solid ${C.cyan}44` }}
-              >
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `${C.cyan}22`, border: `1px solid ${C.cyan}44` }}>
                 <Activity className="w-4 h-4" style={{ color: C.cyan }} />
               </div>
               <div>
-                <p className="text-sm font-bold text-white leading-none">SCADA</p>
-                <p className="text-[9px] text-slate-500 mt-0.5 uppercase tracking-widest">Control Center</p>
+                <p className="text-sm font-bold leading-none" style={{ color: textPrimary }}>
+                  SCADA
+                </p>
+                <p className="text-[9px] mt-0.5 uppercase tracking-widest" style={{ color: textMuted }}>
+                  Control Center
+                </p>
               </div>
             </div>
           )}
           {collapsed && (
             <div className="w-full flex justify-center">
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: `${C.cyan}22`, border: `1px solid ${C.cyan}44` }}
-              >
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${C.cyan}22`, border: `1px solid ${C.cyan}44` }}>
                 <Activity className="w-4 h-4" style={{ color: C.cyan }} />
               </div>
             </div>
           )}
-          {/* Close on mobile */}
-          <button
-            onClick={onClose}
-            className="lg:hidden text-slate-400 hover:text-white transition-colors p-1"
-          >
+          <button onClick={onClose} className="lg:hidden p-1 transition-colors" style={{ color: textMuted }}>
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Nav */}
         <div className="flex-1 overflow-y-auto py-4 px-3 space-y-6" style={{ scrollbarWidth: "none" }}>
-          {/* Main nav */}
           <div className="space-y-1">
             {!collapsed && (
-              <p className="px-3 mb-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: "#475569" }}>
+              <p className="px-3 mb-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: labelColor }}>
                 Main
               </p>
             )}
@@ -152,47 +140,34 @@ function Sidebar({ open, onClose, collapsed, onToggleCollapsed }: { open: boolea
                 to={item.to}
                 end={item.end}
                 onClick={onClose}
-                className={({ isActive }) =>
-                  `relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all group ${collapsed ? "justify-center" : ""}`
-                }
+                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all group ${collapsed ? "justify-center" : ""}`}
                 style={({ isActive }) => ({
                   background: isActive ? `${C.cyan}18` : "transparent",
-                  color: isActive ? C.cyan : "#64748b",
+                  color: isActive ? C.cyan : navInactiveColor,
                   border: `1px solid ${isActive ? `${C.cyan}30` : "transparent"}`,
                 })}
                 title={collapsed ? item.label : undefined}
               >
                 {({ isActive }) => (
                   <>
-                    {isActive && (
-                      <div
-                        className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r"
-                        style={{ background: C.cyan, boxShadow: `0 0 8px ${C.cyan}` }}
-                      />
-                    )}
+                    {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r" style={{ background: C.cyan, boxShadow: `0 0 8px ${C.cyan}` }} />}
                     <span className="flex-shrink-0">{item.icon}</span>
                     {!collapsed && <span className="font-medium">{item.label}</span>}
                     {!collapsed && item.badge && (
-                      <span
-                        className="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full"
-                        style={{ background: `${C.red}33`, color: C.red }}
-                      >
+                      <span className="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: `${C.red}33`, color: C.red }}>
                         {item.badge}
                       </span>
                     )}
-                    {collapsed && item.badge && (
-                      <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style={{ background: C.red }} />
-                    )}
+                    {collapsed && item.badge && <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style={{ background: C.red }} />}
                   </>
                 )}
               </NavLink>
             ))}
           </div>
 
-          {/* Advanced nav */}
           <div className="space-y-1">
             {!collapsed && (
-              <p className="px-3 mb-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: "#475569" }}>
+              <p className="px-3 mb-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: labelColor }}>
                 Advanced
               </p>
             )}
@@ -200,15 +175,13 @@ function Sidebar({ open, onClose, collapsed, onToggleCollapsed }: { open: boolea
               <div
                 key={item.label}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm cursor-not-allowed opacity-50 transition-all ${collapsed ? "justify-center" : ""}`}
-                style={{ color: "#475569" }}
+                style={{ color: navInactiveColor }}
                 title={collapsed ? `${item.label} (Coming Soon)` : undefined}
               >
                 <span className="flex-shrink-0">{item.icon}</span>
+                {!collapsed && <span className="font-medium">{item.label}</span>}
                 {!collapsed && (
-                  <span className="font-medium">{item.label}</span>
-                )}
-                {!collapsed && (
-                  <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded" style={{ background: "rgba(255,255,255,0.06)", color: "#475569" }}>
+                  <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded" style={{ background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)", color: labelColor }}>
                     Soon
                   </span>
                 )}
@@ -216,22 +189,19 @@ function Sidebar({ open, onClose, collapsed, onToggleCollapsed }: { open: boolea
             ))}
           </div>
 
-          {/* Admin */}
           <div className="space-y-1">
             {!collapsed && (
-              <p className="px-3 mb-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: "#475569" }}>
+              <p className="px-3 mb-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: labelColor }}>
                 Admin
               </p>
             )}
             <NavLink
               to="/dashboard/admin"
               onClick={onClose}
-              className={({ isActive }) =>
-                `relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${collapsed ? "justify-center" : ""}`
-              }
+              className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${collapsed ? "justify-center" : ""}`}
               style={({ isActive }) => ({
                 background: isActive ? `${C.red}18` : "transparent",
-                color: isActive ? C.red : "#64748b",
+                color: isActive ? C.red : navInactiveColor,
                 border: `1px solid ${isActive ? `${C.red}30` : "transparent"}`,
               })}
               title={collapsed ? "Master Admin" : undefined}
@@ -242,29 +212,28 @@ function Sidebar({ open, onClose, collapsed, onToggleCollapsed }: { open: boolea
           </div>
         </div>
 
-        {/* User section */}
-        <div className="p-3 flex-shrink-0" style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-          <div
-            className={`flex items-center gap-3 px-2 py-2.5 rounded-xl cursor-pointer transition-all hover:bg-white/5 ${collapsed ? "justify-center" : ""}`}
-          >
-            <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-bold"
-              style={{ background: `${C.cyan}22`, color: C.cyan, border: `1px solid ${C.cyan}44` }}
-            >
+        <div className="p-3 flex-shrink-0" style={{ borderTop: `1px solid ${borderColor}` }}>
+          <button onClick={() => navigate("/login")} className={`w-full flex items-center gap-3 px-2 py-2.5 rounded-xl cursor-pointer transition-all hover:bg-red-500/10 ${collapsed ? "justify-center" : ""}`}>
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-bold" style={{ background: `${C.cyan}22`, color: C.cyan, border: `1px solid ${C.cyan}44` }}>
               AD
             </div>
             {!collapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-white truncate">Admin Operator</p>
-                <p className="text-[10px] truncate" style={{ color: "#475569" }}>Jakarta NOC</p>
-              </div>
+              <>
+                <div className="flex-1 min-w-0 text-left">
+                  <p className="text-xs font-semibold truncate" style={{ color: textPrimary }}>
+                    Admin Operator
+                  </p>
+                  <p className="text-[10px] truncate" style={{ color: textMuted }}>
+                    Jakarta NOC
+                  </p>
+                </div>
+                <LogOut className="w-4 h-4 flex-shrink-0" style={{ color: C.red + "88" }} />
+              </>
             )}
-            {!collapsed && <LogOut className="w-4 h-4 flex-shrink-0" style={{ color: "#475569" }} />}
-          </div>
+          </button>
         </div>
       </aside>
 
-      {/* Desktop collapse toggle */}
       <button
         onClick={onToggleCollapsed}
         className="hidden lg:flex fixed z-50 items-center justify-center w-5 h-10 rounded-r-xl transition-all hover:w-6"
@@ -284,7 +253,7 @@ function Sidebar({ open, onClose, collapsed, onToggleCollapsed }: { open: boolea
   );
 }
 
-function ProfileDropdown({ onClose }: { onClose: () => void }) {
+function ProfileDropdown({ onClose, isDark }: { onClose: () => void; isDark: boolean }) {
   const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -296,28 +265,37 @@ function ProfileDropdown({ onClose }: { onClose: () => void }) {
     return () => document.removeEventListener("mousedown", handler);
   }, [onClose]);
 
+  const dropBg = isDark ? "linear-gradient(135deg, rgba(10,14,39,0.99) 0%, rgba(8,12,30,0.99) 100%)" : "linear-gradient(135deg, rgba(255,255,255,0.99) 0%, rgba(248,250,252,0.99) 100%)";
+  const textPrimary = isDark ? "#ffffff" : "#0f172a";
+  const textSec = isDark ? "#94a3b8" : "#64748b";
+  const itemHover = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.05)";
+  const divider = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
+  const border = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.1)";
+
   return (
     <div
       ref={ref}
-      className="absolute right-0 top-full mt-2 w-56 rounded-2xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+      className="absolute right-0 top-full mt-2 w-56 rounded-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
       style={{
-        background: "linear-gradient(135deg, rgba(10,14,39,0.98) 0%, rgba(8,12,30,0.98) 100%)",
-        border: "1px solid rgba(255,255,255,0.12)",
+        background: dropBg,
+        border: `1px solid ${border}`,
         backdropFilter: "blur(24px)",
-        boxShadow: "0 24px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)",
+        boxShadow: isDark ? "0 24px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)" : "0 8px 40px rgba(0,0,0,0.15)",
+        zIndex: 9999,
       }}
     >
-      <div className="p-3 border-b border-white/08">
+      <div className="p-3" style={{ borderBottom: `1px solid ${divider}` }}>
         <div className="flex items-center gap-3">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold"
-            style={{ background: `${C.cyan}22`, color: C.cyan, border: `1px solid ${C.cyan}44` }}
-          >
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold" style={{ background: `${C.cyan}22`, color: C.cyan, border: `1px solid ${C.cyan}44` }}>
             AD
           </div>
           <div>
-            <p className="text-sm font-semibold text-white">Admin Operator</p>
-            <p className="text-[10px]" style={{ color: "#475569" }}>admin@scada.io</p>
+            <p className="text-sm font-semibold" style={{ color: textPrimary }}>
+              Admin Operator
+            </p>
+            <p className="text-[10px]" style={{ color: textSec }}>
+              admin@scada.io
+            </p>
           </div>
         </div>
       </div>
@@ -330,19 +308,24 @@ function ProfileDropdown({ onClose }: { onClose: () => void }) {
         ].map((item) => (
           <button
             key={item.label}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all hover:bg-white/08 group"
-            style={{ color: "#94a3b8" }}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all group"
+            style={{ color: textSec }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = itemHover)}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
             onClick={onClose}
           >
-            <span className="group-hover:text-cyan-400 transition-colors" style={{ color: C.cyan + "88" }}>{item.icon}</span>
-            <span className="group-hover:text-white transition-colors">{item.label}</span>
+            <span style={{ color: C.cyan + "88" }}>{item.icon}</span>
+            <span>{item.label}</span>
           </button>
         ))}
-        <div className="my-1.5 border-t border-white/08" />
+        <div className="my-1.5" style={{ borderTop: `1px solid ${divider}` }} />
         <button
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all hover:bg-red-500/10"
           style={{ color: C.red }}
-          onClick={() => { onClose(); window.location.href = "/"; }}
+          onClick={() => {
+            onClose();
+            navigate("/login");
+          }}
         >
           <LogOut className="w-4 h-4" />
           <span>Logout</span>
@@ -352,7 +335,7 @@ function ProfileDropdown({ onClose }: { onClose: () => void }) {
   );
 }
 
-function NotificationDropdown({ onClose }: { onClose: () => void }) {
+function NotificationDropdown({ onClose, isDark }: { onClose: () => void; isDark: boolean }) {
   const [notes, setNotes] = useState(NOTIFICATIONS);
   const ref = useRef<HTMLDivElement>(null);
   const unreadCount = notes.filter((n) => !n.read).length;
@@ -365,11 +348,13 @@ function NotificationDropdown({ onClose }: { onClose: () => void }) {
     return () => document.removeEventListener("mousedown", handler);
   }, [onClose]);
 
-  const sevColor: Record<string, string> = {
-    critical: C.red,
-    warning: C.amber,
-    info: C.blue,
-  };
+  const dropBg = isDark ? "linear-gradient(135deg, rgba(10,14,39,0.99) 0%, rgba(8,12,30,0.99) 100%)" : "linear-gradient(135deg, rgba(255,255,255,0.99) 0%, rgba(248,250,252,0.99) 100%)";
+  const textPrimary = isDark ? "#ffffff" : "#0f172a";
+  const divider = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.07)";
+  const border = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.1)";
+  const itemHover = isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)";
+
+  const sevColor: Record<string, string> = { critical: C.red, warning: C.amber, info: C.blue };
   const sevIcon: Record<string, React.ReactNode> = {
     critical: <AlertTriangle className="w-3.5 h-3.5" />,
     warning: <AlertTriangle className="w-3.5 h-3.5" />,
@@ -379,27 +364,28 @@ function NotificationDropdown({ onClose }: { onClose: () => void }) {
   return (
     <div
       ref={ref}
-      className="absolute right-0 top-full mt-2 w-80 rounded-2xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+      className="absolute right-0 top-full mt-2 w-80 rounded-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
       style={{
-        background: "linear-gradient(135deg, rgba(10,14,39,0.98) 0%, rgba(8,12,30,0.98) 100%)",
-        border: "1px solid rgba(255,255,255,0.12)",
+        background: dropBg,
+        border: `1px solid ${border}`,
         backdropFilter: "blur(24px)",
-        boxShadow: "0 24px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)",
+        boxShadow: isDark ? "0 24px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)" : "0 8px 40px rgba(0,0,0,0.15)",
+        zIndex: 9999,
       }}
     >
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/08">
+      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: `1px solid ${divider}` }}>
         <div>
-          <p className="text-sm font-semibold text-white">Notifications</p>
+          <p className="text-sm font-semibold" style={{ color: textPrimary }}>
+            Notifications
+          </p>
           {unreadCount > 0 && (
-            <p className="text-[10px]" style={{ color: C.red }}>{unreadCount} unread alerts</p>
+            <p className="text-[10px]" style={{ color: C.red }}>
+              {unreadCount} unread alerts
+            </p>
           )}
         </div>
         {unreadCount > 0 && (
-          <button
-            className="text-[10px] px-2.5 py-1 rounded-lg font-medium transition-all hover:bg-white/08"
-            style={{ color: C.cyan }}
-            onClick={() => setNotes((n) => n.map((x) => ({ ...x, read: true })))}
-          >
+          <button className="text-[10px] px-2.5 py-1 rounded-lg font-medium transition-all hover:opacity-80" style={{ color: C.cyan }} onClick={() => setNotes((n) => n.map((x) => ({ ...x, read: true })))}>
             Mark all read
           </button>
         )}
@@ -408,35 +394,36 @@ function NotificationDropdown({ onClose }: { onClose: () => void }) {
         {notes.map((note) => (
           <div
             key={note.id}
-            className="px-4 py-3 border-b border-white/05 cursor-pointer transition-all hover:bg-white/04"
-            style={{ opacity: note.read ? 0.6 : 1 }}
+            className="px-4 py-3 cursor-pointer transition-all"
+            style={{ borderBottom: `1px solid ${divider}`, opacity: note.read ? 0.6 : 1 }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = itemHover)}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
             onClick={() => setNotes((n) => n.map((x) => (x.id === note.id ? { ...x, read: true } : x)))}
           >
             <div className="flex items-start gap-3">
-              <div
-                className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
-                style={{ background: `${sevColor[note.severity]}20`, color: sevColor[note.severity] }}
-              >
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: `${sevColor[note.severity]}20`, color: sevColor[note.severity] }}>
                 {sevIcon[note.severity]}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="text-xs font-semibold text-white truncate">{note.title}</p>
+                  <p className="text-xs font-semibold truncate" style={{ color: textPrimary }}>
+                    {note.title}
+                  </p>
                   {!note.read && <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: C.cyan }} />}
                 </div>
-                <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">{note.desc}</p>
-                <p className="text-[9px] mt-1" style={{ color: "#475569" }}>{note.time}</p>
+                <p className="text-[10px] mt-0.5 line-clamp-1" style={{ color: isDark ? "#94a3b8" : "#64748b" }}>
+                  {note.desc}
+                </p>
+                <p className="text-[9px] mt-1" style={{ color: isDark ? "#475569" : "#94a3b8" }}>
+                  {note.time}
+                </p>
               </div>
             </div>
           </div>
         ))}
       </div>
       <div className="p-2">
-        <button
-          className="w-full py-2 rounded-xl text-xs font-medium transition-all hover:bg-white/08"
-          style={{ color: C.cyan }}
-          onClick={onClose}
-        >
+        <button className="w-full py-2 rounded-xl text-xs font-medium transition-all hover:opacity-80" style={{ color: C.cyan }} onClick={onClose}>
           View all notifications
         </button>
       </div>
@@ -445,6 +432,8 @@ function NotificationDropdown({ onClose }: { onClose: () => void }) {
 }
 
 export function DashboardPage() {
+  const { theme, setTheme } = useTheme();
+  const isDark = theme === "dark";
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -464,98 +453,83 @@ export function DashboardPage() {
 
   const unreadCount = NOTIFICATIONS.filter((n) => !n.read).length;
 
+  const pageBg = isDark ? "radial-gradient(ellipse at top left, #0a0e2788 0%, #060810 60%), #060810" : "radial-gradient(ellipse at top left, #dbeafe 0%, #f8fafc 60%), #f0f6ff";
+  const topbarBg = isDark ? "rgba(8,12,30,0.92)" : "rgba(248,250,252,0.96)";
+  const topbarBorder = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)";
+  const clockBg = isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)";
+  const clockBorder = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.07)";
+  const clockColor = isDark ? "#64748b" : "#94a3b8";
+  const iconColor = isDark ? "#64748b" : "#94a3b8";
+
   return (
-    <div
-      className="h-screen flex overflow-hidden"
-      style={{
-        background: "radial-gradient(ellipse at top left, #0a0e2788 0%, #060810 60%), #060810",
-        fontFamily: "'DM Sans', -apple-system, sans-serif",
-      }}
-    >
-      {/* Ambient background glows */}
+    <div className="h-screen flex overflow-hidden" style={{ background: pageBg, fontFamily: "'DM Sans', -apple-system, sans-serif" }}>
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-[0.05]" style={{ background: C.cyan, filter: "blur(100px)" }} />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-[0.03]" style={{ background: C.purple, filter: "blur(80px)" }} />
       </div>
 
-      {/* Sidebar */}
-      <Sidebar
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        collapsed={collapsed}
-        onToggleCollapsed={() => setCollapsed((c) => !c)}
-      />
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} collapsed={collapsed} onToggleCollapsed={() => setCollapsed((c) => !c)} isDark={isDark} />
 
-      {/* Main */}
       <div className="flex-1 flex flex-col overflow-hidden relative z-10 min-w-0">
-        {/* Topbar */}
-        <header
-          className="flex items-center justify-between px-4 lg:px-6 h-16 flex-shrink-0"
-          style={{
-            background: "rgba(8,12,30,0.92)",
-            borderBottom: "1px solid rgba(255,255,255,0.07)",
-            backdropFilter: "blur(20px)",
-          }}
-        >
+        {/* Topbar — z-50 so dropdowns always paint above page content */}
+        <header className="relative z-50 flex items-center justify-between px-4 lg:px-6 h-16 flex-shrink-0" style={{ background: topbarBg, borderBottom: `1px solid ${topbarBorder}`, backdropFilter: "blur(20px)" }}>
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:bg-white/08"
-              style={{ color: "#64748b" }}
-            >
+            <button onClick={() => setSidebarOpen(true)} className="lg:hidden w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:opacity-70" style={{ color: iconColor }}>
               <Menu className="w-5 h-5" />
             </button>
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium"
-              style={{ background: `${C.emerald}12`, border: `1px solid ${C.emerald}33`, color: C.emerald }}
-            >
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: `${C.emerald}12`, border: `1px solid ${C.emerald}33`, color: C.emerald }}>
               <PulseDot color={C.emerald} size={6} />
               All Systems Operational
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Clock */}
-            <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs"
-              style={{ color: "#64748b", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
-            >
+            <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs" style={{ color: clockColor, background: clockBg, border: `1px solid ${clockBorder}` }}>
               <Clock className="w-3.5 h-3.5" />
               <span className="font-mono">{now.toLocaleTimeString("en-GB", { hour12: false })}</span>
             </div>
 
-            {/* Refresh */}
+            {/* Theme toggle */}
             <button
-              onClick={handleRefresh}
-              className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:bg-white/08"
-              style={{ color: refreshing ? C.cyan : "#64748b" }}
-              title="Refresh data"
+              onClick={() => setTheme(isDark ? "light" : "dark")}
+              className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:opacity-70"
+              style={{ color: iconColor, background: clockBg, border: `1px solid ${clockBorder}` }}
+              title="Toggle theme"
             >
+              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+
+            <button onClick={handleRefresh} className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:opacity-70" style={{ color: refreshing ? C.cyan : iconColor }} title="Refresh data">
               <RefreshCw className={`w-4 h-4 transition-transform ${refreshing ? "animate-spin" : ""}`} />
             </button>
 
             {/* Notifications */}
             <div className="relative">
               <button
-                onClick={() => { setShowNotifications((s) => !s); setShowProfile(false); }}
-                className="relative w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:bg-white/08"
-                style={{ color: showNotifications ? C.cyan : "#64748b" }}
+                onClick={() => {
+                  setShowNotifications((s) => !s);
+                  setShowProfile(false);
+                }}
+                className="relative w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:opacity-70"
+                style={{ color: showNotifications ? C.cyan : iconColor }}
               >
                 <Bell className="w-4 h-4" />
                 {unreadCount > 0 && (
-                  <span
-                    className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold"
-                    style={{ background: C.red, color: "#fff" }}
-                  >
+                  <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold" style={{ background: C.red, color: "#fff" }}>
                     {unreadCount}
                   </span>
                 )}
               </button>
-              {showNotifications && <NotificationDropdown onClose={() => setShowNotifications(false)} />}
+              {showNotifications && <NotificationDropdown onClose={() => setShowNotifications(false)} isDark={isDark} />}
             </div>
 
             {/* Profile */}
             <div className="relative">
               <button
-                onClick={() => { setShowProfile((s) => !s); setShowNotifications(false); }}
+                onClick={() => {
+                  setShowProfile((s) => !s);
+                  setShowNotifications(false);
+                }}
                 className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold transition-all hover:opacity-80"
                 style={{
                   background: `${C.cyan}22`,
@@ -566,16 +540,12 @@ export function DashboardPage() {
               >
                 AD
               </button>
-              {showProfile && <ProfileDropdown onClose={() => setShowProfile(false)} />}
+              {showProfile && <ProfileDropdown onClose={() => setShowProfile(false)} isDark={isDark} />}
             </div>
           </div>
         </header>
 
-        {/* Page content */}
-        <main
-          className="flex-1 overflow-y-auto p-4 lg:p-6"
-          style={{ scrollbarWidth: "thin", scrollbarColor: "#1e293b transparent" }}
-        >
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6" style={{ scrollbarWidth: "thin", scrollbarColor: "#1e293b transparent" }}>
           <Outlet />
         </main>
       </div>
