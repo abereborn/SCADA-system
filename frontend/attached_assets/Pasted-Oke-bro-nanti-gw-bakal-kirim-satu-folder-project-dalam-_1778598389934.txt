@@ -1,0 +1,130 @@
+Oke bro, nanti gw bakal kirim satu folder project dalam bentuk ZIP.
+
+Yang gw mau:
+bukan cuma improve UI doang, tapi sekalian refactor dan bersihin seluruh struktur project supaya jauh lebih scalable, clean, modular, dan professional seperti standard project modern production-ready.
+
+REQUEST UTAMA:
+
+1. REFACTOR STRUKTUR COMPONENT
+
+* Jangan taruh logic component besar langsung di file View/Page utama.
+* Semua component dipisah ke folder/component masing-masing.
+* File view/page cukup:
+
+  * import component
+  * panggil component
+* Jadi kalau mau edit card/navbar/footer/widget tinggal buka file component terkait saja.
+
+Contoh yang gw mau:
+
+* components/landing/Navbar.tsx
+* components/landing/HeroSection.tsx
+* components/landing/FeatureGrid.tsx
+* components/landing/SystemStatusWidget.tsx
+* components/landing/Footer.tsx
+* components/common/FadeInSection.tsx
+* dll
+
+2. CSS / STYLING DIBERSIHKAN
+
+* Jangan campur custom styling besar langsung di component.
+* Custom styling dipindahkan dan dirapihkan ke file CSS utama/global.
+* Kasih section comment jelas seperti:
+
+/* =========================
+CUSTOM CSS
+========================= */
+
+supaya default style dan custom style tetap gampang dibedakan.
+
+3. IMPROVE DESIGN SECARA KESELURUHAN
+   Tolong improve seluruh UI/UX:
+
+* lebih modern
+* futuristic
+* industrial SaaS feel
+* minimalis
+* premium
+* elegant
+* clean
+* responsive
+
+Inspirasi:
+AI dashboard / cyber infrastructure / next-gen monitoring platform / enterprise SaaS.
+
+4. IMPROVE ANIMATIONS
+   Tambahkan animasi modern tapi smooth:
+
+* fade in on scroll
+* stagger animation
+* hover glow
+* glassmorphism
+* smooth transition
+* spotlight hover
+* animated gradients
+* floating effect
+* subtle parallax
+* smoother draggable widget motion
+* easing/inertia movement jika memungkinkan
+
+Tetap elegant dan jangan berlebihan.
+
+5. SYSTEM STATUS WIDGET
+   Improve widget draggable:
+
+* movement lebih smooth
+* lebih premium
+* floating lebih halus
+* glow effect lebih bagus
+* better drag feel
+* modern glass effect
+* responsive
+
+6. FOOTER
+
+* Ganti footer logo menggunakan logo yang sama dengan navbar
+* Improve layout footer supaya lebih premium
+
+7. CLEAN CODE
+
+* Rapihkan naming
+* Rapihkan reusable utilities
+* Pisahkan constants/data jika perlu
+* Optimasi structure project
+* Hindari duplicate code
+* Component reusable dibuat generic
+
+8. RESPONSIVE
+   Pastikan:
+
+* mobile bagus
+* tablet bagus
+* desktop bagus
+* spacing konsisten
+* typography rapi
+
+9. OPTIONAL IMPROVEMENT
+   Kalau memang perlu dan cocok:
+
+* tambahkan reusable animation wrapper
+* custom hooks
+* utility helper
+* reusable card system
+* section wrapper
+* glow background layer
+* reusable button variants
+* reusable section title component
+
+10. SETELAH SELESAI
+    Tolong kasih penjelasan detail:
+
+* struktur folder baru
+* component baru yang dibuat
+* apa saja yang direfactor
+* apa saja yang diimprove
+* animation yang ditambahkan
+* alasan UX/UI improvement
+* best practice yang diterapkan
+
+Goal akhir:
+Project ini harus terasa seperti enterprise-grade futuristic SCADA monitoring platform yang modern, premium, scalable, clean, dan professional.

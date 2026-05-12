@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { Activity, Eye, EyeOff, Sun, Moon } from 'lucide-react';
-import { useTheme } from './ThemeProvider';
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { Activity, Eye, EyeOff, Sun, Moon } from "lucide-react";
+import { useTheme } from "./ThemeProvider";
+import logo from "../../images/logo.png";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -11,36 +12,35 @@ export function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-background text-foreground transition-colors duration-300">
       {/* Theme Toggle Top Right */}
       <div className="absolute top-6 right-6 z-50">
-        <button
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="p-2 rounded-full bg-accent/50 text-foreground hover:bg-accent transition-colors"
-          aria-label="Toggle theme"
-        >
-          {theme === 'dark' ? <Sun className="size-5" /> : <Moon className="size-5" />}
+        <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="p-2 rounded-full bg-accent/50 text-foreground hover:bg-accent transition-colors" aria-label="Toggle theme">
+          {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
         </button>
       </div>
 
       {/* Industrial Background Pattern */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
             linear-gradient(var(--color-primary) 1px, transparent 1px),
             linear-gradient(90deg, var(--color-primary) 1px, transparent 1px)
           `,
-          backgroundSize: '50px 50px'
-        }}></div>
+            backgroundSize: "50px 50px",
+          }}
+        ></div>
       </div>
 
       {/* Animated Background Elements */}
       <div className="absolute top-20 left-20 size-64 bg-primary/10 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
-      <div className="absolute bottom-20 right-20 size-96 bg-accent/10 rounded-full blur-3xl animate-pulse pointer-events-none" style={{ animationDelay: '1s' }}></div>
+      <div className="absolute bottom-20 right-20 size-96 bg-accent/10 rounded-full blur-3xl animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
 
       {/* Login Card */}
       <div className="relative min-h-screen flex items-center justify-center p-4">
@@ -48,7 +48,7 @@ export function LoginPage() {
           {/* Logo */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <Activity className="size-12 text-primary" />
+              <img src={logo} alt="SCADA Logo" className="ab-scada-logo h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-300" />
               <h1 className="text-3xl font-bold">SCADA Control</h1>
             </div>
             <p className="text-muted-foreground">Industrial Monitoring & Control System</p>
@@ -80,16 +80,12 @@ export function LoginPage() {
                 <div className="relative">
                   <input
                     id="password"
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     className="w-full px-4 py-3 pr-12 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                     required
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
-                  >
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1">
                     {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
                   </button>
                 </div>
@@ -97,23 +93,14 @@ export function LoginPage() {
 
               {/* Remember Me */}
               <div className="flex items-center">
-                <input
-                  id="remember"
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="size-4 rounded border-border bg-background text-primary focus:ring-primary"
-                />
+                <input id="remember" type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} className="size-4 rounded border-border bg-background text-primary focus:ring-primary" />
                 <label htmlFor="remember" className="ml-2 text-muted-foreground text-sm cursor-pointer select-none">
                   Remember me
                 </label>
               </div>
 
               {/* Login Button */}
-              <button
-                type="submit"
-                className="w-full py-3 rounded-lg bg-primary text-primary-foreground hover:opacity-90 font-medium transition-opacity shadow-lg shadow-primary/20"
-              >
+              <button type="submit" className="w-full py-3 rounded-lg bg-primary text-primary-foreground hover:opacity-90 font-medium transition-opacity shadow-lg shadow-primary/20">
                 Secure Login
               </button>
             </form>

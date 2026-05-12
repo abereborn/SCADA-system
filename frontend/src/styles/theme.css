@@ -42,9 +42,10 @@
 }
 
 .dark {
-  --background: #0a0e27;
+  /* Default Theme */
+  --background: #000000;
   --foreground: oklch(0.985 0 0);
-  --card: #111827;
+  --card: #0b0f31;
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.145 0 0);
   --popover-foreground: oklch(0.985 0 0);
@@ -87,6 +88,37 @@
   --scada-bg-dark: #0a0e27;
   --scada-card-bg: #111827;
   --scada-border: rgba(255, 255, 255, 0.1);
+
+  /* Custom Theme */
+
+  --abNavColor: #212d40ba;
+}
+
+.ab-navColor {
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, var(--abNavColor) 90%, transparent);
+  }
+}
+
+.ab-bg-color {
+  @supports (color: color-mix(in lab, red, red)) {
+    background-color: color-mix(in oklab, #00000000 30%, transparent);
+  }
+}
+
+.ab-scada-logo {
+  filter: brightness(0);
+  transition:
+    filter 0.4s ease,
+    transform 0.3s ease;
+}
+
+.dark .ab-scada-logo {
+  filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.25));
+}
+
+.ab-scada-logo:hover {
+  transform: scale(1.03);
 }
 
 .leaflet-container {
