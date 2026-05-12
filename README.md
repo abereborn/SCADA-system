@@ -97,32 +97,6 @@ This project focuses on:
 * Fully Responsive Layout
 * Modern Dashboard Design
 
----
-
-# 📂 Project Structure
-
-```bash
-SCADA-system/
-│
-├── public/
-│
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── assets/
-│   ├── layouts/
-│   ├── hooks/
-│   ├── utils/
-│   └── App.jsx
-│
-├── package.json
-├── vite.config.js
-├── tailwind.config.js
-└── README.md
-```
-
----
-
 # 📱 Responsive Design
 
 This dashboard is optimized for:
