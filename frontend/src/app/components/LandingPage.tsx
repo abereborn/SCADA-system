@@ -9,6 +9,7 @@ import { TestimonialsSection } from "./landing/TestimonialsSection";
 import { PricingSection } from "./landing/PricingSection";
 import { CTASection } from "./landing/CTASection";
 import { Footer } from "./landing/Footer";
+import { LandingBackground } from "./landing/LandingBackground";
 
 export function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
@@ -41,17 +42,21 @@ export function LandingPage() {
         }
       `}</style>
 
-      <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-        <Navbar scrolled={scrolled} />
-        <HeroSection />
-        <StatsSection />
-        <FeaturesSection />
-        <PlatformSection />
-        <MapSection />
-        <TestimonialsSection />
-        <PricingSection />
-        <CTASection />
-        <Footer />
+      <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
+        <LandingBackground />
+
+        <div className="relative z-10">
+          <Navbar scrolled={scrolled} />
+          <HeroSection />
+          <StatsSection />
+          <FeaturesSection />
+          <PlatformSection />
+          <MapSection />
+          <TestimonialsSection />
+          <PricingSection />
+          <CTASection />
+          <Footer />
+        </div>
       </div>
     </>
   );

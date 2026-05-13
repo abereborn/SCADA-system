@@ -53,7 +53,7 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapsed, isDark }:
         <div className="flex items-center justify-between px-4 h-16 flex-shrink-0" style={{ borderBottom: `1px solid ${borderColor}` }}>
           {!collapsed && (
             <div className="flex items-center gap-2.5">
-              <img src="/logo.png" alt="SCADA Logo" className="h-8 w-auto object-contain" />
+              <img src="/logo.png" alt="SCADA Logo" className="ab-scada-logo h-8 w-auto object-contain" />
               <div>
                 <p className="text-sm font-bold leading-none" style={{ color: textPrimary }}>
                   SCADA
