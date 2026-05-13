@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Activity, Eye, EyeOff, Sun, Moon } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
-import logo from "../../images/logo.png";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -48,7 +47,7 @@ export function LoginPage() {
           {/* Logo */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <img src={logo} alt="SCADA Logo" className="ab-scada-logo h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-300" />
+              <img src="/logo.png" alt="SCADA Logo" className="ab-scada-logo h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-300" />
               <h1 className="text-3xl font-bold">SCADA Control</h1>
             </div>
             <p className="text-muted-foreground">Industrial Monitoring & Control System</p>
