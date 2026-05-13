@@ -201,20 +201,15 @@ export function SystemStatusWidget() {
       style={{
         left: `${displayPos.x}px`,
         top: `${displayPos.y}px`,
-        transform: isDragging
-          ? "translateY(0px) scale(1.02)"
-          : `translateY(${floatY}px) scale(1)`,
-        transition: isDragging
-          ? "transform .1s ease"
-          : "transform .6s cubic-bezier(.34,1.56,.64,1)",
+        transform: isDragging ? "translateY(0px) scale(1.02)" : `translateY(${floatY}px) scale(1)`,
+        transition: isDragging ? "transform .1s ease" : "transform .6s cubic-bezier(.34,1.56,.64,1)",
         willChange: "transform, left, top",
       }}
     >
       <div
         className="relative w-72 rounded-3xl overflow-hidden"
         style={{
-          background:
-            "linear-gradient(145deg, rgba(var(--card-rgb,20,20,30),.92) 0%, rgba(var(--card-rgb,20,20,30),.80) 100%)",
+          background: "linear-gradient(145deg, rgba(var(--card-rgb,20,20,30),.92) 0%, rgba(var(--card-rgb,20,20,30),.80) 100%)",
           border: "1px solid rgba(var(--primary-rgb,99,102,241),.3)",
           backdropFilter: "blur(24px) saturate(160%)",
           boxShadow: isDragging
@@ -226,15 +221,13 @@ export function SystemStatusWidget() {
         <div
           className="absolute inset-x-0 top-0 h-[1px]"
           style={{
-            background:
-              "linear-gradient(90deg, transparent, hsl(var(--primary)/.7) 40%, hsl(200 100% 60%/.7) 60%, transparent)",
+            background: "linear-gradient(90deg, transparent, hsl(var(--primary)/.7) 40%, hsl(200 100% 60%/.7) 60%, transparent)",
           }}
         />
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background:
-              "radial-gradient(ellipse at 20% 0%, hsl(var(--primary)/.07) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, hsl(200 100% 60%/.05) 0%, transparent 60%)",
+            background: "radial-gradient(ellipse at 20% 0%, hsl(var(--primary)/.07) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, hsl(200 100% 60%/.05) 0%, transparent 60%)",
           }}
         />
 
@@ -244,16 +237,13 @@ export function SystemStatusWidget() {
           }`}
           style={{
             background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary)/.8))",
-            border: "1.5px solid rgba(255,255,255,.15)",
-            boxShadow: isDragging
-              ? "0 8px 32px hsl(var(--primary)/.6), 0 0 0 4px hsl(var(--primary)/.15)"
-              : "0 4px 16px hsl(var(--primary)/.4)",
+            boxShadow: isDragging ? "0 8px 32px hsl(var(--primary)/.6), 0 0 0 4px hsl(var(--primary)/.15)" : "0 4px 16px hsl(var(--primary)/.4)",
             transition: "all .25s cubic-bezier(.34,1.56,.64,1)",
           }}
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
         >
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 to-primary/40 blur-sm" />
+          <div className="absolute" />
           <svg className="w-4 h-4 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
           </svg>
@@ -272,25 +262,15 @@ export function SystemStatusWidget() {
 
         <div className="relative pt-12 pb-5 px-5 z-10">
           <div className="flex items-center justify-between mb-4 relative z-10">
-            <span className="text-sm font-semibold bg-gradient-to-r from-primary via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              System Status
-            </span>
-            <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-medium border border-emerald-500/20">
-              All Operational
-            </span>
+            <span className="text-sm font-semibold bg-gradient-to-r from-primary via-cyan-400 to-blue-500 bg-clip-text text-transparent">System Status</span>
+            <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-medium border border-emerald-500/20">All Operational</span>
           </div>
 
           {STATUSES.map((s) => (
-            <div
-              key={s.name}
-              className="flex items-center justify-between py-2.5 border-b border-border/30 last:border-0 relative z-10"
-            >
+            <div key={s.name} className="flex items-center justify-between py-2.5 border-b border-border/30 last:border-0 relative z-10">
               <span className="text-sm text-muted-foreground font-medium">{s.name}</span>
               <div className="flex items-center gap-1.5">
-                <div
-                  className={`w-2 h-2 rounded-full shadow-sm ${s.status === "Syncing" ? "animate-pulse" : ""}`}
-                  style={{ background: DOT_COLORS[s.color] }}
-                />
+                <div className={`w-2 h-2 rounded-full shadow-sm ${s.status === "Syncing" ? "animate-pulse" : ""}`} style={{ background: DOT_COLORS[s.color] }} />
                 <span className="text-xs font-semibold text-foreground">{s.status}</span>
               </div>
             </div>
