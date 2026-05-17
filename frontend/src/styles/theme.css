@@ -121,15 +121,29 @@
   transform: scale(1.03);
 }
 
-.leaflet-container {
-  z-index: 0;
-}
+/* =========================
+   CUSTOM CSS - SYSTEM STATUS WIDGET
+========================= */
 
-.dark .leaflet-layer,
-.dark .leaflet-control-zoom-in,
-.dark .leaflet-control-zoom-out,
-.dark .leaflet-control-attribution {
-  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+.ab-system-widget {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(240, 249, 255, 0.82));
+
+  border: 1px solid rgba(14, 165, 233, 0.18);
+
+  backdrop-filter: blur(24px) saturate(180%);
+
+  box-shadow:
+    0 24px 70px rgba(15, 23, 42, 0.1),
+    0 8px 24px rgba(14, 165, 233, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+.dark .ab-system-widget {
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.92), rgba(2, 6, 23, 0.82));
+  border: 1px solid rgba(14, 165, 233, 0.3);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(14, 165, 233, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 @theme inline {

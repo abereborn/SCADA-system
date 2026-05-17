@@ -27,13 +27,7 @@ const PLANS: PricingPlan[] = [
     price: "Rp 4.5M",
     period: "/ month",
     desc: "For growing operations teams",
-    features: [
-      "Up to 100 stations",
-      "1-year data history",
-      "Smart alert engine",
-      "API access",
-      "Priority support",
-    ],
+    features: ["Up to 100 stations", "1-year data history", "Smart alert engine", "API access", "Priority support"],
     cta: "Start Free Trial",
     highlight: true,
   },
@@ -41,13 +35,7 @@ const PLANS: PricingPlan[] = [
     name: "Enterprise",
     price: "Custom",
     desc: "For large-scale deployments",
-    features: [
-      "Unlimited stations",
-      "Unlimited history",
-      "Dedicated SLA",
-      "On-premise option",
-      "24/7 NOC",
-    ],
+    features: ["Unlimited stations", "Unlimited history", "Dedicated SLA", "On-premise option", "24/7 NOC"],
     cta: "Contact Sales",
     highlight: false,
   },
@@ -56,28 +44,23 @@ const PLANS: PricingPlan[] = [
 export function PricingSection() {
   return (
     <section id="pricing" className="py-28 px-6">
-      <SectionTitle
-        eyebrow="Pricing"
-        title="Simple, Transparent Plans"
-        subtitle="Scalable pricing that grows with your infrastructure."
-        className="max-w-4xl mx-auto mb-14"
-      />
+      <SectionTitle eyebrow="Pricing" title="Simple, Transparent Plans" subtitle="Scalable pricing that grows with your infrastructure." className="max-w-4xl mx-auto mb-14" />
       <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-6">
         {PLANS.map((plan, i) => (
           <AnimatedSection key={plan.name} delay={i * 100} direction="up">
             <div
-              className="relative h-full rounded-2xl p-6 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1.5"
+              className="relative h-full rounded-2xl p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1.5"
               style={
                 plan.highlight
                   ? {
-                      background: "linear-gradient(145deg, hsl(var(--primary)/.08), hsl(var(--card)))",
-                      border: "1px solid hsl(var(--primary)/.45)",
-                      boxShadow: "0 20px 60px hsl(var(--primary)/.15), inset 0 1px 0 hsl(var(--primary)/.15)",
+                      background: "linear-gradient(145deg, hsl(var(--primary)/.18), hsl(var(--card)/.92))",
+                      border: "1px solid hsl(var(--primary)/.6)",
+                      boxShadow: "0 24px 70px hsl(var(--primary)/.22), 0 0 0 1px rgba(255,255,255,.04), inset 0 1px 0 rgba(255,255,255,.08)",
                     }
                   : {
-                      background: "hsl(var(--card)/.6)",
-                      border: "1px solid hsl(var(--border)/.6)",
-                      boxShadow: "inset 0 1px 0 rgba(255,255,255,.03)",
+                      background: "linear-gradient(145deg, hsl(var(--card)/.88), hsl(var(--card)/.72))",
+                      border: "1px solid hsl(var(--border)/.85)",
+                      boxShadow: "0 18px 50px rgba(0,0,0,.28), 0 0 0 1px rgba(255,255,255,.03), inset 0 1px 0 rgba(255,255,255,.06)",
                     }
               }
             >
@@ -105,9 +88,7 @@ export function PricingSection() {
               <p className="text-sm text-muted-foreground mb-5">{plan.desc}</p>
               <div className="flex items-baseline gap-1.5 mb-7">
                 <span className="text-3xl font-extrabold tracking-tight">{plan.price}</span>
-                {plan.period && (
-                  <span className="text-sm text-muted-foreground">{plan.period}</span>
-                )}
+                {plan.period && <span className="text-sm text-muted-foreground">{plan.period}</span>}
               </div>
               <ul className="space-y-2.5 mb-8">
                 {plan.features.map((f) => (
@@ -127,7 +108,10 @@ export function PricingSection() {
                         color: "hsl(var(--primary-foreground))",
                         boxShadow: "0 4px 16px hsl(var(--primary)/.25)",
                       }
-                    : { border: "1px solid hsl(var(--border)/.7)" }
+                    : {
+                        background: "hsl(var(--card)/.55)",
+                        border: "1px solid hsl(var(--border)/.8)",
+                      }
                 }
               >
                 {plan.cta}

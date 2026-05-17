@@ -19,8 +19,7 @@ function AnimatedGrid() {
       <div
         className="absolute inset-x-0 h-[2px] opacity-30"
         style={{
-          background:
-            "linear-gradient(90deg, transparent 0%, hsl(var(--primary)/.8) 50%, transparent 100%)",
+          background: "linear-gradient(90deg, transparent 0%, hsl(var(--primary)/.8) 50%, transparent 100%)",
           animation: "scanDown 8s linear infinite",
           top: 0,
         }}
@@ -28,14 +27,10 @@ function AnimatedGrid() {
       <div
         className="absolute inset-0"
         style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% 0%, transparent 30%, hsl(var(--background)/.8) 100%)",
+          background: "radial-gradient(ellipse 80% 60% at 50% 0%, transparent 30%, hsl(var(--background)/.8) 100%)",
         }}
       />
-      <div
-        className="absolute inset-x-0 bottom-0 h-64"
-        style={{ background: "linear-gradient(to top, hsl(var(--background)), transparent)" }}
-      />
+      <div className="absolute inset-x-0 bottom-0 h-64" style={{ background: "linear-gradient(to top, hsl(var(--background)), transparent)" }} />
     </div>
   );
 }
@@ -100,36 +95,26 @@ export function HeroSection() {
         </AnimatedSection>
 
         <AnimatedSection delay={80}>
-          <h1 className="text-5xl sm:text-6xl lg:text-[76px] font-extrabold leading-[1.04] tracking-tight mb-6">
+          <h1 className="heading-font text-7xl sm:text-6xl lg:text-[76px] font-extrabold leading-[1.04] tracking-tight mb-6">
             Industrial SCADA
             <br />
-            <span className="bg-gradient-to-r from-primary via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              Monitoring Platform
-            </span>
+            <span className="bg-gradient-to-r from-primary via-cyan-400 to-blue-500 bg-clip-text text-transparent">Monitoring Platform</span>
           </h1>
         </AnimatedSection>
 
         <AnimatedSection delay={160}>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl leading-relaxed mb-10">
-            Real-time geospatial monitoring, intelligent alerting, and predictive analytics for
-            critical infrastructure across Indonesia — built for engineers who demand precision.
+            Real-time geospatial monitoring, intelligent alerting, and predictive analytics for critical infrastructure across Indonesia — built for engineers who demand precision.
           </p>
         </AnimatedSection>
 
         <AnimatedSection delay={240}>
           <div className="flex flex-wrap gap-4 mb-16">
-            <Link
-              to="/dashboard"
-              className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold shadow-lg shadow-primary/25 hover:opacity-95 hover:scale-105 transition-all"
-            >
+            <Link to="/dashboard" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold shadow-lg shadow-primary/25 hover:opacity-95 hover:scale-105 transition-all">
               Open Dashboard
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
-            <a
-              href="#map"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl border font-medium transition-all duration-300 hover:scale-105 backdrop-blur-sm"
-              style={{ borderColor: "hsl(var(--border)/.7)" }}
-            >
+            <a href="#map" className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl border font-medium transition-all duration-300 hover:scale-105 backdrop-blur-sm" style={{ borderColor: "hsl(var(--border)/.7)" }}>
               <MapPin className="w-4 h-4 text-primary" />
               View Live Map
             </a>

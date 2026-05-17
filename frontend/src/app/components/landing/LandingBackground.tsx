@@ -14,9 +14,10 @@ export function LandingBackground() {
       <div className="absolute bottom-[-250px] right-[-100px] w-[600px] h-[600px] rounded-full bg-blue-500/10 dark:bg-blue-600/20 blur-[160px]" />
 
       {/* Indonesia Hologram Map */}
-      <div className="absolute right-[4%] top-[32%] hidden lg:block w-[560px] opacity-90 dark:opacity-80">
+      <div className="absolute left-1/2 top-[46%] hidden lg:block w-[1200px] -translate-x-1/2 -translate-y-1/2">
         {/* ambient glow */}
-        <div className="absolute inset-0 rounded-full bg-cyan-500/20 blur-[140px]" />
+        <div className="absolute inset-0 rounded-full bg-cyan-500/25 dark:bg-cyan-400/30 blur-[140px]" />
+
         <img
           src="/indonesia-map.svg"
           alt="Indonesia Map"
@@ -25,18 +26,18 @@ export function LandingBackground() {
             w-full
             h-auto
             object-contain
-            opacity-75
-            animate-[mapGlow_4s_ease-in-out_infinite]
+            opacity-[0.18]
+            dark:opacity-[0.38]
             brightness-125
-            contrast-125
-            saturate-150
-            [filter:drop-shadow(0_0_18px_rgba(34,211,238,0.45))]
-        "
+            contrast-150
+            [filter:drop-shadow(0_0_28px_rgba(34,211,238,0.45))]
+          "
         />
+
         {/* nodes */}
-        <div className="absolute left-[33%] top-[58%] w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-        <div className="absolute left-[47%] top-[43%] w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-        <div className="absolute left-[67%] top-[50%] w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+        <div className="absolute left-[33%] top-[58%] w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_18px_rgba(34,211,238,0.9)] animate-ping" />
+        <div className="absolute left-[47%] top-[43%] w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_18px_rgba(34,211,238,0.9)] animate-ping" />
+        <div className="absolute left-[67%] top-[50%] w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_18px_rgba(34,211,238,0.9)] animate-ping" />
       </div>
 
       {/* Dark Overlay */}

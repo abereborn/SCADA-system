@@ -50,16 +50,16 @@ export function SystemStatusWidget() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("systemStatusPosition");
-      if (saved) {
-        const { x, y } = JSON.parse(saved);
-        applyPos({
-          x: Math.max(20, Math.min(x, window.innerWidth - 300)),
-          y: Math.max(20, Math.min(y, window.innerHeight - 420)),
-        });
-      }
+      const defaultPos = {
+        x: Math.max(40, window.innerWidth * 0.7),
+        y: Math.max(120, window.innerHeight * 0.3),
+      };
+
+      applyPos(constrain(defaultPos.x, defaultPos.y));
     }
+
     startFloat();
+
     return () => {
       if (floatRaf.current) cancelAnimationFrame(floatRaf.current);
     };
@@ -207,11 +207,8 @@ export function SystemStatusWidget() {
       }}
     >
       <div
-        className="relative w-72 rounded-3xl overflow-hidden"
+        className="ab-system-widget relative w-72 rounded-3xl overflow-hidden transition-all duration-300"
         style={{
-          background: "linear-gradient(145deg, rgba(var(--card-rgb,20,20,30),.92) 0%, rgba(var(--card-rgb,20,20,30),.80) 100%)",
-          border: "1px solid rgba(var(--primary-rgb,99,102,241),.3)",
-          backdropFilter: "blur(24px) saturate(160%)",
           boxShadow: isDragging
             ? "0 32px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(var(--primary-rgb,99,102,241),.4), inset 0 1px 0 rgba(255,255,255,.06)"
             : "0 20px 60px rgba(0,0,0,.4), 0 0 0 1px rgba(var(--primary-rgb,99,102,241),.15), inset 0 1px 0 rgba(255,255,255,.05)",
@@ -232,7 +229,7 @@ export function SystemStatusWidget() {
         />
 
         <div
-          className={`absolute -top-1 left-1/2 -translate-x-1/2 flex items-center justify-center w-11 h-11 rounded-full text-primary-foreground z-20 transition-all duration-200 ${
+          className={`absolute -top-1 left-1/2 -translate-x-1/2 flex items-center justify-center w-11 h-11 rounded-full text-black dark:text-white z-20 transition-all duration-200 ${
             isDragging ? "scale-110 cursor-grabbing" : "cursor-grab hover:scale-105"
           }`}
           style={{
